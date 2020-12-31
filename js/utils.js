@@ -8,10 +8,17 @@ function exponentialFormat(num, precision, mantissa = true) {
 		e = e.add(1)
 	}
 	e = (e.gte(10000) ? commaFormat(e, 0) : e.toStringWithDecimalPlaces(0))
-	if (mantissa)
+	if (mantissa){
 		return m.toStringWithDecimalPlaces(precision)+"e"+e
-		else return "e"+e
+    } else {
+        return "e"+e
 	}
+}
+
+function logarithmFormat(num, precision){
+    var e = num.log10().floor(precision);
+    return "e" + commaFormat(e, precision)
+}
 
 function commaFormat(num, precision) {
 	if (num === null || num === undefined) return "NaN"
@@ -49,8 +56,9 @@ function format(decimal, precision=2,) {
 		if (slog.gte(1e6)) return "F" + format(slog.floor())
 		else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
 	}
-	else if (decimal.gte("1e100000")) return exponentialFormat(decimal, 0, false)
-	else if (decimal.gte("1e1000")) return exponentialFormat(decimal, 0)
+    //In this house we use LOGARITHM format.
+	else if (decimal.gte("1e100000")) return logarithmFormat(decimal, 0)
+	else if (decimal.gte("1e1000")) return logarithmFormat(decimal, precision)
 	else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
 	else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
 	else return regularFormat(decimal, precision)
@@ -728,7 +736,8 @@ function updateMilestones(layer){
 	for (id in layers[layer].milestones){
 		if (!(hasMilestone(layer, id)) && layers[layer].milestones[id].done()){
 			player[layer].milestones.push(id)
-			if (tmp[layer].milestonePopups || tmp[layer].milestonePopups === undefined) doPopup("milestone", tmp[layer].milestones[id].requirementDescription, "Milestone Gotten!", 3, tmp[layer].color);
+            //"Gotten"? Really?
+			if (tmp[layer].milestonePopups || tmp[layer].milestonePopups === undefined) doPopup("milestone", tmp[layer].milestones[id].requirementDescription, "Milestone Reached!", 3, tmp[layer].color);
 		}
 	}
 }
@@ -738,7 +747,7 @@ function updateAchievements(layer){
 		if (isPlainObject(layers[layer].achievements[id]) && !(hasAchievement(layer, id)) && layers[layer].achievements[id].done()) {
 			player[layer].achievements.push(id)
 			if (layers[layer].achievements[id].onComplete) layers[layer].achievements[id].onComplete()
-			if (tmp[layer].achievementPopups || tmp[layer].achievementPopups === undefined) doPopup("achievement", tmp[layer].achievements[id].name, "Achievement Gotten!", 3, tmp[layer].color);
+			if (tmp[layer].achievementPopups || tmp[layer].achievementPopups === undefined) doPopup("achievement", tmp[layer].achievements[id].name, "Achievement Unlocked!", 3, tmp[layer].color);
 		}
 	}
 }
