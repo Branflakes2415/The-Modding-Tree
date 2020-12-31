@@ -51,14 +51,17 @@ addLayer("ach", {
         },
         13: {
             name(){
+                if(hasAchievement("ach", 22)){
+                    return "This achievement lied to me!";
+                }
                 if(hasAchievement("ach", this.id) || this.done()){
-                    return "Wait, there's only 3?";
+                    return "There's only three in this one";
                 }
                 return "???";
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Bought a single Cube. Row 2 draws near! (1AP)";
+                    return "Bought a single Cube. Row 2 approaches! (1AP)";
                 }
                 return "Buy a single Cube. (1AP)";
             },
@@ -68,6 +71,7 @@ addLayer("ach", {
         },
         14: {
             name(){
+                //This displays as ??? in the achievement unlock popup and I don't know why. Too bad!
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Intermediary Achievement";
                 }
@@ -75,7 +79,7 @@ addLayer("ach", {
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Reached 1,048,576 Points. (1AP)";
+                    return "Reached 1,048,576 Points. Yay. (1AP)";
                 }
                 return "Get 1,048,576 Points. (1AP)";
             },
@@ -86,21 +90,24 @@ addLayer("ach", {
         15: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
-                    return "That wasn't so hard";
+                    return "Not an infinity point";
                 }
                 return "???";
             },
             tooltip(){
-                if(player.ach.points.lt(4)){
-                    return "Requirement shown at 4 Achievement Power.";
+                if(player.ach.points.lt(3)){
+                    return "Requirement shown at 3 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
                     return "Got an Improvement Point. (1AP)";
                 }
-                return "Get an Improvement Point. (1AP)";
+                return "Perform a row 2 reset. (1AP)";
             },
             done(){return player.i.points.gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){
+                player.ach.points = player.ach.points.plus(1);
+                console.log("First IP: " + formatTime(player.timePlayed));
+            },
             //image: "../images/ach15.jpg",
         },
         16: {
@@ -111,16 +118,19 @@ addLayer("ach", {
                 return "???";
             },
             tooltip(){
-                if(player.ach.points.lt(4)){
-                    return "Requirement shown at 4 Achievement Power.";
+                if(player.ach.points.lt(5)){
+                    return "Requirement shown at 5 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Reached 3 Improvement Points. No more cheap upgrades for you! (2AP)";
+                    return "Reached 3 Improvement Points. (2AP)";
                 }
                 return "Get 3 Improvement Points. (2AP)";
             },
             done(){return player.i.points.gte(3)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){
+                player.ach.points = player.ach.points.plus(2)
+                console.log("Hat Trick: " + formatTime(player.timePlayed));
+            },
             //image: "../images/ach16.jpg",
         },
         21: {
@@ -135,12 +145,15 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got 128 total bonus bought Geometry buyables. (actually this just fires when you get i2x4 because i'm lazy) (1AP)";
+                    return "Got 128 total bonus bought Geometry buyables. (actually this just fires when you get {imp2x4} because i'm lazy) (1AP)";
                 }
                 return "Get 128 total bonus bought Geometry buyables. (1AP)";
             },
             done(){return hasUpgrade("i", 24)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){
+                player.ach.points = player.ach.points.plus(1);
+                console.log("Great Deal: " + formatTime(player.timePlayed));
+            },
             //image: "../images/ach21.jpg",
         },
         22: {
@@ -155,12 +168,15 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Unlocked Tesseracts. (2AP)";
+                    return "Unlocked Tesseracts. That upgrade used to be 30 IP, by the way. What was I thinking?(2AP)";
                 }
                 return "Buy the Improvement {imp90x1}. (2AP)";
             },
             done(){return player[this.layer].triggerAchievement22Dammit},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){
+                player.ach.points = player.ach.points.plus(2);
+                console.log("Tesseract: " + formatTime(player.timePlayed));
+            },
             //image: "../images/ach22.jpg",
         },
         23: {
@@ -180,7 +196,10 @@ addLayer("ach", {
                 return "Get 13 Improvements. (2AP)";
             },
             done(){return hasUpgrade("i", 51)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){
+                player.ach.points = player.ach.points.plus(2);
+                console.log("13 Improvements: " + formatTime(player.timePlayed));
+            },
             //image: "../images/ach23.jpg",
         },
         24: {
@@ -195,9 +214,9 @@ addLayer("ach", {
                     return "Requirement shown at 10 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Witnessed a Geometry buyable jump up in cost dramatically. (1AP)";
+                    return "Made a Geometry buyable jump up in cost dramatically. (1AP)";
                 }
-                return "Get a Geometry buyable's cost over 1e300. (1AP)";
+                return "Get a Geometry buyable's cost over 1e308. (1AP)";
             },
             done(){return (layers.g.buyables[11].cost().gte("1e400") || layers.g.buyables[21].cost().gte("1e400") || layers.g.buyables[31].cost().gte("1e400") || layers.g.buyables[41].cost().gte("1e400"))},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
@@ -219,13 +238,84 @@ addLayer("ach", {
                 }
                 return "Perform a row 3 reset. (5AP)";
             },
-            //Haven't added Collapse yet - short circuit evaluation to the rescue!
+            //Haven't added Collapse yet
             done(){return false && player.c.points.gte(1)},
-            //image: "../images/ach24.jpg",
+            //image: "../images/ach25.jpg",
         }
     },
     tabFormat: [
         "main-display",
+        "blank","blank","blank",
+        "achievements"
+    ]
+})
+
+addLayer("scr", {
+    name: "Secret Achievements",
+    symbol: "S",
+    position: 0,
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+        triggerAchievement22Dammit: false,
+    }},
+    color: "#404040",
+    resource: "secret power",
+    row: "side",
+    achievements: {
+        rows: 69,
+        cols: 3,
+        11: {
+            name(){
+                return "Flipping the Script";
+            },
+            tooltip(){
+                if(hasAchievement("scr", this.id)){
+                    return "Have more TRUE bought Tesseracts than Cubes, more Cubes than Squares, and more Squares than Line Segments. (1SP)";
+                }
+                return "Hint: Antitables, but it's way simpler. (1SP)";
+            },
+            done(){return player.g.bought[4].gt(player.g.bought[3]) && player.g.bought[3].gt(player.g.bought[2]) && player.g.bought[2].gt(player.g.bought[1])},
+            onComplete(){player.scr.points = player.scr.points.plus(1)},
+            //image: "../images/scr11.jpg",
+        },
+        12: {
+            name(){
+                return "4D Chess";
+            },
+            tooltip(){
+                if(hasAchievement("scr", this.id)){
+                    return "Have 42 TRUE bought Tesseracts with only one of each of the previous buyables. (1SP)";
+                }
+                return "Hint: [1,1,1,'a lot']. (1SP)";
+            },
+            done(){return player.g.bought[4].gte(42) && player.g.bought[3].eq(1) && player.g.bought[2].eq(1) && player.g.bought[1].eq(1)},
+            onComplete(){player.scr.points = player.scr.points.plus(1)},
+            //image: "../images/scr12.jpg",
+        },
+        13: {
+            name(){
+                return "Speedrunner";
+            },
+            tooltip(){
+                if(hasAchievement("scr", this.id)){
+                    return "Beat the speedrun time (of any version). (0SP)";
+                }
+                return "Hint: Check the changelog. (0SP)";
+            },
+            done(){return gameEnded && player.timePlayed < speedrunTime},
+            //image: "../images/scr13.jpg",
+        },
+    },
+    componentStyles: {
+        "achievement"() { return {
+            width:"160px",
+            height:"160px",
+        }}
+    },
+    tabFormat: [
+        "main-display",
+        "blank","blank","blank",
         "achievements"
     ]
 })
@@ -247,17 +337,12 @@ addLayer("g", {
     totalBuyables: 4,
     //[Max all]
     maxAll(){
-        //Lag tracker. I feel like I'll need this later.
-        var startTime = Date.now();
         for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
             if(layers[this.layer].buyables[i * 10 + 1].unlocked()){
                 while(layers[this.layer].buyables[i * 10 + 1].canAfford()){
                     this.buyAThing([i * 10 + 1], layers[this.layer].buyables[i * 10 + 1].cost());
                 }
             }
-        }
-        if(Date.now() - startTime > 1){
-            console.log("Maxed all Geometry buyables in " + (Date.now() - startTime) + "ms");
         }
     },
     clickables: {
@@ -303,7 +388,7 @@ addLayer("g", {
         return result;
     },
     //Returns the effective bought amount for a given buyable.
-    //Featuring Tukkun levels of if() statements.
+    //Featuring a ridiculous amount of if() statements.
     calcEffBought(id){
         var result = player[this.layer].bought[Math.floor(id / 10)];
         if(hasUpgrade("i", 12)){
@@ -341,7 +426,7 @@ addLayer("g", {
         var cmult = new Decimal(cml);
         var cminc = new Decimal(cmi);
         result = result.times(cmult.pow(player[this.layer].bought[Math.floor(id / 10)]));
-        if(result.gte(1e300)){
+        if(result.gte(1e308)){
             result = result.pow(player[this.layer].bought[Math.floor(id / 10)].times(cminc).plus(1));
         }
         return result;
@@ -525,7 +610,7 @@ addLayer("i", {
         },
         13: {
             title: "imp1x3",
-            description: "Increases the bought amount of all Geometry buyables based on total IP. {(x*10)^0.5}",
+            description: "Increases the bought amount of all Geometry buyables based on total IP.",
             effect(){
                 var result = player.i.points.times(10).pow(0.5);
                 if(result.gte(10)){
@@ -535,9 +620,9 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(10)){
-                    return "+" + format(this.effect()) + " (softcapped)";
+                    return "+" + format(this.effect()) + "\n{(x*1e5)^(1/6)} (softcapped)";
                 }
-                return "+" + format(this.effect());
+                return "+" + format(this.effect()) + "\n{(x*10)^0.5}";
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
@@ -620,7 +705,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(23),
+            cost: new Decimal(16),
             unlocked(){return hasUpgrade(this.layer, 32)}
         },
         41: {
@@ -642,7 +727,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(11),
+            cost: new Decimal(16),
             unlocked(){return hasUpgrade(this.layer, 33)}
         },
         42: {
@@ -652,7 +737,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 33)}
+            unlocked(){return hasUpgrade(this.layer, 41)}
         },
         51: {
             title: "imp5x1",
@@ -666,13 +751,19 @@ addLayer("i", {
         901: {
             title: "imp90x1",
             description: "Resets Geometry AND this layer, but PERMANENTLY unlocks Tesseracts and new Improvements.",
-            cost: new Decimal(30),
+            cost: new Decimal(29),
             unlocked(){return hasUpgrade(this.layer, 31) && !hasAchievement("ach", 22)},
             onPurchase(){
                 player.ach.triggerAchievement22Dammit = true;
                 layerDataReset(this.layer);
             }
         }
+    },
+    componentStyles: {
+        "upgrade"() { return {
+            width:"160px",
+            height:"160px",
+        }}
     },
     tabFormat: [
         "main-display",

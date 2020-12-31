@@ -12,17 +12,25 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.1",
-	name: "getting-started.md",
+	num: "0.1.2",
+	name: "It's a Secret",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.1.2 - It's a Secret</h3><br>
+        - Added Secret Achievements.
+        - A bunch of little tweaks pertaining to Achievements.<br>
+        - Adjusted some Improvement costs.<br>
+        - Added speedrun splits (they're in the console).<br>
+        - Speedrun time: 30m 0s<br>
+    <br>
     <h3>v0.1.1 - getting-started.md</h3><br>
 		- Moved to Github.<br>
     <br>
 	<h3>v0.1 - Gee, I'm a Tree</h3><br>
 		- Added Geometry.<br>
-		- Added Improvements.`
+		- Added Improvements.<br>
+        - Game ends at 2^1024 points.`
 
 let winText = `You have too many Points; the universe is on the verge of collapse. But that's for another update- for now, the game is over.`
 
@@ -65,6 +73,7 @@ function addedPlayerData() { return {
 var displayThings = [
 ]
 
+let speedrunTime = 1800
 // Determines when the game "ends"
 function isEndgame() {
 	return player.points.gte(new Decimal(2).pow(1024));
@@ -76,7 +85,7 @@ function isEndgame() {
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(200) // Default is 1 hour which is just arbitrarily large
+	return(5)
 }
 
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
