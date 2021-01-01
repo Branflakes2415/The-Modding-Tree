@@ -9,6 +9,9 @@ addLayer("ach", {
     }},
     color: "#d0d040",
     resource: "achievement power",
+    tooltip(){
+        return "Achievements (" + formatWhole(player.ach.points) + "AP)";
+    },
     row: "side",
     achievements: {
         rows: 69,
@@ -19,7 +22,7 @@ addLayer("ach", {
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "You gotta start somewh-[COPYRIGHT]";
                 }
-                return "???";
+                return "??? ????? ????? ??????? ???????????";
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
@@ -29,15 +32,19 @@ addLayer("ach", {
             },
             done(){return getBuyableAmount("g", 11).gte(1)},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
-            //images to be added later
-            //image: "../images/ach11.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach11.png";
+                };
+                return "../images/locked/ach_g.png";
+            },
         },
         12: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Four Squared";
                 }
-                return "???";
+                return "???? ???????";
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
@@ -47,7 +54,12 @@ addLayer("ach", {
             },
             done(){return getBuyableAmount("g", 21).gte(1)},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
-            //image: "../images/ach12.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach12.png";
+                };
+                return "../images/locked/ach_g.png";
+            },
         },
         13: {
             name(){
@@ -57,7 +69,7 @@ addLayer("ach", {
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "There's only three in this one";
                 }
-                return "???";
+                return "??????? ???? ????? ?? ???? ???";
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
@@ -67,7 +79,12 @@ addLayer("ach", {
             },
             done(){return getBuyableAmount("g", 31).gte(1)},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
-            //image: "../images/ach13.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach13.png";
+                };
+                return "../images/locked/ach_g.png";
+            },
         },
         14: {
             name(){
@@ -75,7 +92,7 @@ addLayer("ach", {
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Intermediary Achievement";
                 }
-                return "???";
+                return "???????????? ???????????";
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
@@ -85,14 +102,19 @@ addLayer("ach", {
             },
             done(){return player.points.gte(1048576)},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
-            //image: "../images/ach14.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach14.png";
+                };
+                return "../images/locked/ach_g.png";
+            },
         },
         15: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Not an infinity point";
                 }
-                return "???";
+                return "??? ?? ???????? ?????";
             },
             tooltip(){
                 if(player.ach.points.lt(3)){
@@ -108,14 +130,19 @@ addLayer("ach", {
                 player.ach.points = player.ach.points.plus(1);
                 console.log("First IP: " + formatTime(player.timePlayed));
             },
-            //image: "../images/ach15.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach15.png";
+                };
+                return "../images/locked/ach_i.png";
+            },
         },
         16: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Hat Trick";
                 }
-                return "???";
+                return "??? ?????";
             },
             tooltip(){
                 if(player.ach.points.lt(5)){
@@ -131,14 +158,19 @@ addLayer("ach", {
                 player.ach.points = player.ach.points.plus(2)
                 console.log("Hat Trick: " + formatTime(player.timePlayed));
             },
-            //image: "../images/ach16.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach16.png";
+                };
+                return "../images/locked/ach_i.png";
+            },
         },
         21: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Great Deal";
                 }
-                return "???";
+                return "????? ????";
             },
             tooltip(){
                 if(player.ach.points.lt(7)){
@@ -154,14 +186,19 @@ addLayer("ach", {
                 player.ach.points = player.ach.points.plus(1);
                 console.log("Great Deal: " + formatTime(player.timePlayed));
             },
-            //image: "../images/ach21.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach21.png";
+                };
+                return "../images/locked/ach_i.png";
+            },
         },
         22: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "[FOUR DIMENSIONS]";
                 }
-                return "???";
+                return "????? ???????????";
             },
             tooltip(){
                 if(player.ach.points.lt(7)){
@@ -177,14 +214,19 @@ addLayer("ach", {
                 player.ach.points = player.ach.points.plus(2);
                 console.log("Tesseract: " + formatTime(player.timePlayed));
             },
-            //image: "../images/ach22.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach22.png";
+                };
+                return "../images/locked/ach_i.png";
+            },
         },
         23: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
-                    return "Looks Kinda Like a Jewel Sorta";
+                    return "Looks kinda like a jewel, sorta";
                 }
-                return "???";
+                return "????? ????? ???? ? ?????? ?????";
             },
             tooltip(){
                 if(player.ach.points.lt(7)){
@@ -200,14 +242,19 @@ addLayer("ach", {
                 player.ach.points = player.ach.points.plus(2);
                 console.log("13 Improvements: " + formatTime(player.timePlayed));
             },
-            //image: "../images/ach23.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach23.png";
+                };
+                return "../images/locked/ach_i.png";
+            },
         },
         24: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Extreme Inflation";
                 }
-                return "???";
+                return "??????? ?????????";
             },
             tooltip(){
                 if(player.ach.points.lt(10)){
@@ -220,14 +267,19 @@ addLayer("ach", {
             },
             done(){return (layers.g.buyables[11].cost().gte("1e400") || layers.g.buyables[21].cost().gte("1e400") || layers.g.buyables[31].cost().gte("1e400") || layers.g.buyables[41].cost().gte("1e400"))},
             onComplete(){player.ach.points = player.ach.points.plus(1)},
-            //image: "../images/ach24.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach24.png";
+                };
+                return "../images/locked/ach_g.png";
+            },
         },
         25: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
                     return "Ain't enough room for the 2^1,024 of us";
                 }
-                return "???";
+                return "????? ?????? ???? ??? ??? ??????? ?? ??";
             },
             tooltip(){
                 if(player.ach.points.lt(10)){
@@ -240,8 +292,19 @@ addLayer("ach", {
             },
             //Haven't added Collapse yet
             done(){return false && player.c.points.gte(1)},
-            //image: "../images/ach25.jpg",
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
         }
+    },
+    componentStyles: {
+        "achievement"() { return {
+            width:"96px",
+            height:"96px",
+        }}
     },
     tabFormat: [
         "main-display",
@@ -261,13 +324,19 @@ addLayer("scr", {
     }},
     color: "#404040",
     resource: "secret power",
+    tooltip(){
+        return "Secret Achievements (" + formatWhole(player.scr.points) + "SP)";
+    },
     row: "side",
     achievements: {
         rows: 69,
         cols: 3,
         11: {
             name(){
-                return "Flipping the Script";
+                if(hasAchievement("scr", this.id) || this.done()){
+                    return "Flipping the Script";
+                }
+                return "???????? ??? ??????";
             },
             tooltip(){
                 if(hasAchievement("scr", this.id)){
@@ -277,11 +346,19 @@ addLayer("scr", {
             },
             done(){return player.g.bought[4].gt(player.g.bought[3]) && player.g.bought[3].gt(player.g.bought[2]) && player.g.bought[2].gt(player.g.bought[1])},
             onComplete(){player.scr.points = player.scr.points.plus(1)},
-            //image: "../images/scr11.jpg",
+            image(){
+                if(hasAchievement("scr", this.id)){
+                    return "../images/scr11.png";
+                };
+                return "../images/locked/scr_gflip.png";
+            },
         },
         12: {
             name(){
-                return "4D Chess";
+                if(hasAchievement("scr", this.id) || this.done()){
+                    return "4D Chess";
+                }
+                return "?? ?????";
             },
             tooltip(){
                 if(hasAchievement("scr", this.id)){
@@ -291,11 +368,19 @@ addLayer("scr", {
             },
             done(){return player.g.bought[4].gte(42) && player.g.bought[3].eq(1) && player.g.bought[2].eq(1) && player.g.bought[1].eq(1)},
             onComplete(){player.scr.points = player.scr.points.plus(1)},
-            //image: "../images/scr12.jpg",
+            image(){
+                if(hasAchievement("scr", this.id)){
+                    return "../images/scr12.png";
+                };
+                return "../images/locked/scr_g.png";
+            },
         },
-        13: {
+        421: {
             name(){
-                return "Speedrunner";
+                if(hasAchievement("scr", this.id) || this.done()){
+                    return "Speedrunner";
+                }
+                return "???????????";
             },
             tooltip(){
                 if(hasAchievement("scr", this.id)){
@@ -304,7 +389,12 @@ addLayer("scr", {
                 return "Hint: Check the changelog. (0SP)";
             },
             done(){return gameEnded && player.timePlayed < speedrunTime},
-            //image: "../images/scr13.jpg",
+            image(){
+                if(hasAchievement("scr", this.id)){
+                    return "../images/scr421.png";
+                };
+                return "../images/locked/scr_ex.png";
+            },
         },
     },
     componentStyles: {
@@ -620,7 +710,7 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(10)){
-                    return "+" + format(this.effect()) + "\n{(x*1e5)^(1/6)} (softcapped)";
+                    return "+" + format(this.effect()) + "\n{(x*100,000)^(1/6)} (softcapped)";
                 }
                 return "+" + format(this.effect()) + "\n{(x*10)^0.5}";
             },
@@ -698,9 +788,9 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(30)){
-                    return "+" + format(this.effect()) + " (softcapped)";
+                    return "+" + format(this.effect()) + "\n{(x*8,100,000)^(1/6)} (softcapped)";
                 }
-                return "+" + format(this.effect());
+                return "+" + format(this.effect()) + "\n{(x*10)^0.5}";
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
@@ -720,9 +810,9 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(30)){
-                    return "+" + format(this.effect()) + " (softcapped)";
+                    return "+" + format(this.effect()) + "\n{(x*36,726,822)^0.15} (softcapped)";
                 }
-                return "+" + format(this.effect());
+                return "+" + format(this.effect()) + "\n{(x*10)^0.45}";
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
@@ -759,6 +849,9 @@ addLayer("i", {
             }
         }
     },
+    hotkeys: [
+        {key: "i", description: "I: Do an Improvement reset", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
     componentStyles: {
         "upgrade"() { return {
             width:"160px",

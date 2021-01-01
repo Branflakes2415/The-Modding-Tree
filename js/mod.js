@@ -12,13 +12,21 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.2",
-	name: "It's a Secret",
+	num: "0.1.3",
+	name: "High Quality Images",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.1.3 - High Quality Images</h3><br>
+		- Added achievement images.<br>
+        - Locked achievements show how long their names are.<br>
+        - Added a hotkey to do an Improvement reset.<br>
+        - Added formula displays for {imp3x3} and {imp4x1}.<br>
+        <br>
+<strike>- fixed a missing line break in the changelog, oops</strike><br>
+    <br>
     <h3>v0.1.2 - It's a Secret</h3><br>
-        - Added Secret Achievements.
+        - Added Secret Achievements.<br>
         - A bunch of little tweaks pertaining to Achievements.<br>
         - Adjusted some Improvement costs.<br>
         - Added speedrun splits (they're in the console).<br>
