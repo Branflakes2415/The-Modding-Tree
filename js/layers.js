@@ -177,9 +177,9 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got 128 total bonus bought Geometry buyables. (actually this just fires when you get {imp2x4} because i'm lazy) (1AP)";
+                    return "Got 128 total free bought Geometry buyables. (actually this just fires when you get {imp2x4} because i'm lazy) (1AP)";
                 }
-                return "Get 128 total bonus bought Geometry buyables. (1AP)";
+                return "Get 128 total free bought Geometry buyables. (1AP)";
             },
             done(){return hasUpgrade("i", 24)},
             onComplete(){
@@ -286,19 +286,144 @@ addLayer("ach", {
                     return "Requirement shown at 10 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Collapse the universe. (5AP)";
+                    return "Collapsed the universe. (5AP)";
                 }
                 return "Perform a row 3 reset. (5AP)";
             },
-            //Haven't added Collapse yet
-            done(){return false && player.c.points.gte(1)},
+            done(){return player.c.points.gte(1)},
+            onComplete(){player.ach.points = player.ach.points.plus(5)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
                 };
                 return "../images/locked/ach_c.png";
             },
-        }
+        },
+        31: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "That was quick";
+                }
+                return "???? ??? ?????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(18)){
+                    return "Requirement shown at 18 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Collapsed the universe three times. (2AP)";
+                }
+                return "Collapse the universe three times. (2AP)";
+            },
+            done(){return player.c.resetCount.gte(3)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        32: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Not very challenging";
+                }
+                return "??? ???? ???????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(20)){
+                    return "Requirement shown at 20 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed a Collapse Challenge. (2AP)";
+                }
+                return "Complete a Collapse Challenge. (2AP)";
+            },
+            done(){return hasChallenge("c", 11)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        33: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Upgrade Speed Buyer";
+                }
+                return "??????? ????? ?????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(20)){
+                    return "Requirement shown at 20 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Collapsed in under 7.77 seconds. (2AP)";
+                }
+                return "Collapse in under 7.77 seconds. (2AP)";
+            },
+            done(){return (player.c.bestTime < 7.77)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        34: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Somewhat more challenging";
+                }
+                return "???????? ???? ???????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(20)){
+                    return "Requirement shown at 20 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed the second Collapse Challenge. (1AP)";
+                }
+                return "Complete the second Collapse Challenge. (1AP)";
+            },
+            done(){return hasChallenge("c", 21)},
+            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        35: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "A Minor Test of Patience";
+                }
+                return "? ????? ???? ?? ????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(20)){
+                    return "Requirement shown at 20 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed the third Collapse Challenge. (3AP)";
+                }
+                return "Complete the third Collapse Challenge. (3AP)";
+            },
+            done(){return hasChallenge("c", 22)},
+            onComplete(){player.ach.points = player.ach.points.plus(3)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
     },
     componentStyles: {
         "achievement"() { return {
@@ -362,17 +487,64 @@ addLayer("scr", {
             },
             tooltip(){
                 if(hasAchievement("scr", this.id)){
-                    return "Have 42 TRUE bought Tesseracts with only one of each of the previous buyables. (1SP)";
+                    return "Have 44 TRUE bought Tesseracts with only one of each of the previous buyables. (1SP)";
                 }
                 return "Hint: [1,1,1,'a lot']. (1SP)";
             },
-            done(){return player.g.bought[4].gte(42) && player.g.bought[3].eq(1) && player.g.bought[2].eq(1) && player.g.bought[1].eq(1)},
+            done(){return player.g.bought[4].gte(44) && player.g.bought[3].eq(1) && player.g.bought[2].eq(1) && player.g.bought[1].eq(1)},
             onComplete(){player.scr.points = player.scr.points.plus(1)},
             image(){
                 if(hasAchievement("scr", this.id)){
                     return "../images/scr12.png";
                 };
                 return "../images/locked/scr_g.png";
+            },
+        },
+        13: {
+            name(){
+                if(hasAchievement("scr", this.id) || this.done()){
+                    return "Probably enough IP";
+                }
+                return "???????? ?????? ??";
+            },
+            tooltip(){
+                if(hasAchievement("scr", this.id) && !player.infinityBroken){
+                    return "Have 137 IP without [REDACTED]. (1SP)";
+                }
+                if(hasAchievement("scr", this.id)){
+                    return "Have 137 IP without breaking infinity. (1SP)";
+                }
+                return "Hint: Next at 6.37e309. (1SP)";
+            },
+            done(){return !player.infinityBroken && player.i.points.gte(137)},
+            onComplete(){player.scr.points = player.scr.points.plus(1)},
+            image(){
+                if(hasAchievement("scr", this.id)){
+                    return "../images/scr13.png";
+                };
+                return "../images/locked/scr_i.png";
+            },
+        },
+        21: {
+            name(){
+                if(hasAchievement("scr", this.id) || this.done()){
+                    return "Oops";
+                }
+                return "????";
+            },
+            tooltip(){
+                if(hasAchievement("scr", this.id)){
+                    return "Have 0 points/sec with at least one Line Segment. (1SP)";
+                }
+                return "Hint: Multiplication by zero. (1SP)";
+            },
+            done(){return getBuyableAmount("g", 11).gte(1) && getPointGen().eq(0) && canGenPoints()},
+            onComplete(){player.scr.points = player.scr.points.plus(1)},
+            image(){
+                if(hasAchievement("scr", this.id)){
+                    return "../images/scr21.png";
+                };
+                return "../images/locked/scr_c.png";
             },
         },
         421: {
@@ -418,6 +590,7 @@ addLayer("g", {
         unlocked: true,
 		points: new Decimal(0),
         bought: ["This array is not zero-indexed", new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+        autoMax: false,
     }},
     color: "#206010",
     resource: "This shouldn't be visible", // Name of prestige currency
@@ -437,7 +610,7 @@ addLayer("g", {
     },
     clickables: {
         rows: 1,
-        cols: 69,
+        cols: 9,
         11: {
             display() {return "<h2>Max all [M]</h2>"},
             canClick(){
@@ -454,26 +627,67 @@ addLayer("g", {
                 width:"150px",
                 height:"40px",
             }
+        },
+        12: {
+            display() { return "<h2>Auto: " + player[this.layer].autoMax + "</h2>" },
+            unlocked(){ return hasAchievement("ach", 32) },
+            canClick(){ return this.unlocked() },
+            onClick() { player[this.layer].autoMax = !player[this.layer].autoMax },
+            style: {
+                width:"150px",
+                height:"40px",
+            }
         }
     },
-    
     //Some functions regarding buyables, to make this code less of a horrible violation of DRY.
     //Downside: Targeting specific buyables with effects is a bit unwieldy, but it's not /that/ bad.
     //Returns the multiplier for a given buyable.
     calcMult(id){
         var result = new Decimal(1.5);
+        //Improvement per-bought boosts
         if(hasUpgrade("i", 21)){
             result = result.plus(0.15);
         }
         if(hasUpgrade("i", 51)){
             result = result.plus(0.033);
+            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+                result = result.plus(0.066);
+            }
+        }
+        //Collapse per-bought boosts
+        if(inChallenge("c", 21)){
+            result = result.plus(0.65);
+        }
+        if(hasChallenge("c", 21)){
+            result = result.plus(0.065);
         }
         result = result.pow(layers[this.layer].calcEffBought(id));
+        //Improvement multipliers
         if(hasUpgrade("i", 11)){
-            result = result.times(8);
+            result = result.times(upgradeEffect("i", 11));
         }
         if(hasUpgrade("i", 31)){
             result = result.times(upgradeEffect("i", 31));
+        }
+        //Collapse multipliers
+        result = result.times(layers.c.effect().segMult);
+        if(id == 11 && hasUpgrade("c", 11)){
+            result = result.times(64);
+            if(hasUpgrade("c", 51)){
+                result = result.times(64);
+            }
+        }
+        if(id == 41 && hasUpgrade("c", 12)){
+            result = result.times(256);
+            if(hasUpgrade("c", 51)){
+                result = result.times(256);
+            }
+        }
+        if(hasUpgrade("c", 43)){
+            result = result.times(upgradeEffect("c", 43));
+            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+                result = result.times(upgradeEffect("c", 43));
+            }
         }
         return result;
     },
@@ -481,6 +695,12 @@ addLayer("g", {
     //Featuring a ridiculous amount of if() statements.
     calcEffBought(id){
         var result = player[this.layer].bought[Math.floor(id / 10)];
+        if(inChallenge("c", 21)){
+            result = new Decimal(0);
+        }
+        if(inChallenge("c", 22)){
+            return result;
+        }
         if(hasUpgrade("i", 12)){
             result = result.plus(upgradeEffect("i", 12));
         };
@@ -636,6 +856,11 @@ addLayer("g", {
             setBuyableAmount(this.layer, (i * 10 + 1), getBuyableAmount(this.layer, (i * 10 + 1)).plus(getBuyableAmount(this.layer, (i * 10 + 11)).times(layers[this.layer].buyables[(i * 10 + 11)].mult()).times(diff)));
         }
     },
+    automate(){
+        if(player[this.layer].autoMax){
+            layers[this.layer].maxAll();
+        }
+    },
     hotkeys: [
         {key: "m", description: "M: Max all (Geometry layer)", onPress(){layers[this.layer].maxAll()}},
     ],
@@ -651,6 +876,14 @@ addLayer("g", {
         "blank",
         "buyables"
     ],
+    doReset(resettingLayer){
+        if(layers[resettingLayer].row > this.row){
+            layerDataReset(this.layer, ["autoMax"]);
+            if(hasUpgrade("c", 63)){
+                player.points = new Decimal(2).pow(256);
+            }
+        };
+    },
     layerShown(){return true}
 })
 
@@ -662,6 +895,8 @@ addLayer("i", {
         unlocked: false,
         points: new Decimal(0),
         unspent: new Decimal(0),
+        autoReset: false,
+        autoImprove: false,
     }},
     color: "#add8e6",
     resource: "improvement points",
@@ -673,9 +908,51 @@ addLayer("i", {
     requires() {return new Decimal(16777216)},
     base: 4096,
     exponent: 0.9,
+    gainMult(){
+        var result = new Decimal(1);
+        if(hasUpgrade("c", 42)){
+            result = result.div(upgradeEffect("c", 42));
+            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+                result = result.times(upgradeEffect("c", 43));
+            }
+        };
+        return result;
+    },
     canBuyMax() {return true},
     onPrestige(gain){
         player[this.layer].unspent = player[this.layer].unspent.plus(gain);
+    },
+    clickables:{
+        rows: 1,
+        cols: 9,
+        11: {
+            display() { return "<h2>Auto-Reset: " + player[this.layer].autoReset + "</h2>" },
+            unlocked(){ return hasAchievement("ach", 34) },
+            canClick(){ return this.unlocked() },
+            onClick() { player[this.layer].autoReset = !player[this.layer].autoReset },
+            style: {
+                width:"200px",
+                height:"40px",
+            }
+        },
+        12: {
+            display() { return "<h2>Auto-Improve: " + player[this.layer].autoImprove + "</h2>" },
+            unlocked(){ return hasAchievement("ach", 35) },
+            canClick(){ return this.unlocked() },
+            onClick() { player[this.layer].autoImprove = !player[this.layer].autoImprove },
+            style: {
+                width:"200px",
+                height:"40px",
+            }
+        },
+    },
+    automate(){
+        if(player[this.layer].autoImprove){
+            autobuyUpgrades(this.layer);
+        };
+        if(player[this.layer].autoReset && canReset(this.layer)){
+            doReset(this.layer);
+        };
     },
     upgrades: {
         rows: 99,
@@ -683,6 +960,25 @@ addLayer("i", {
         11: {
             title: "imp1x1",
             description: "Multiplies all Geometry multipliers by 8.",
+            effect(){
+                if(inChallenge("c", 22)){
+                    return new Decimal(8).pow(Math.pow(player.i.upgrades.length, 1.2));
+                };
+                if(hasChallenge("c", 22)){
+                    return new Decimal(8).pow(challengeEffect("c", 22));
+                };
+                return new Decimal(8);
+            },
+            effectDisplay(){
+                var cc3note = "";
+                if(hasChallenge("c", 22)){
+                    cc3note = "<br>(Challenge Reward: Effect ^" + format(challengeEffect("c", 22)) + ")";
+                }
+                if(inChallenge("c", 22)){
+                    cc3note = "<br>(Pay to Win: Effect ^" + format(Math.pow(player.i.upgrades.length, 1.2)) + ")";
+                }
+                return "x" + format(this.effect()) + cc3note;
+            },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
@@ -702,23 +998,31 @@ addLayer("i", {
             title: "imp1x3",
             description: "Increases the bought amount of all Geometry buyables based on total IP.",
             effect(){
-                var result = player.i.points.times(10).pow(0.5);
+                var result = player.i.points;
+                if(inChallenge("c", 11)){
+                    result = player.i.unspent
+                }
+                result = result.times(10).pow(0.5);
                 if(result.gte(10)){
                     result = result.times(100).pow(1.0/3);
                 }
                 return result;
             },
             effectDisplay(){
-                if(this.effect().gte(10)){
-                    return "+" + format(this.effect()) + "\n{(x*100,000)^(1/6)} (softcapped)";
+                var cc1note = "";
+                if(inChallenge("c", 11)){
+                    cc1note = "<br>(Spendthrift: UNSPENT IP)";
                 }
-                return "+" + format(this.effect()) + "\n{(x*10)^0.5}";
+                if(this.effect().gte(10)){
+                    return "+" + format(this.effect()) + "<br>{(x*100,000)^(1/6)} (softcapped)" + cc1note;
+                }
+                return "+" + format(this.effect()) + "<br>{(x*10)^0.5}" + cc1note;
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(1),
-            unlocked(){return hasUpgrade(this.layer, 11) && hasUpgrade(this.layer, 12)}
+            unlocked(){return (hasUpgrade(this.layer, 11) && hasUpgrade(this.layer, 12)) || hasUpgrade("c", 61)}
         },
         21: {
             title: "imp2x1",
@@ -727,7 +1031,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(2),
-            unlocked(){return hasUpgrade(this.layer, 13)}
+            unlocked(){return hasUpgrade(this.layer, 13) || hasUpgrade("c", 61)}
         },
         22: {
             title: "imp2x2",
@@ -736,7 +1040,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(3),
-            unlocked(){return hasUpgrade(this.layer, 21)}
+            unlocked(){return hasUpgrade(this.layer, 21) || hasUpgrade("c", 61)}
         },
         23: {
             title: "imp2x3",
@@ -745,7 +1049,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(3),
-            unlocked(){return hasUpgrade(this.layer, 22)}
+            unlocked(){return hasUpgrade(this.layer, 22) || hasUpgrade("c", 61)}
         },
         24: {
             title: "imp2x4",
@@ -754,18 +1058,30 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(4),
-            unlocked(){return hasUpgrade(this.layer, 23)}
+            unlocked(){return hasUpgrade(this.layer, 23) || hasUpgrade("c", 61)}
         },
         31: {
             title: "imp3x1",
             description: "Multiplies all Geometry multipliers by your IP.",
-            effect(){return player.i.points},
-            effectDisplay(){return "x" + formatWhole(player.i.points)},
+            effect(){
+                var result = player.i.points;
+                if(inChallenge("c", 11)){
+                    result = player.i.unspent;
+                }
+                return result
+            },
+            effectDisplay(){
+                var cc1note = "";
+                if(inChallenge("c", 11)){
+                    cc1note = "<br>(Spendthrift: UNSPENT IP)";
+                }
+                return "x" + formatWhole(this.effect()) + cc1note;
+            },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(9),
-            unlocked(){return hasUpgrade(this.layer, 24)}
+            unlocked(){return hasUpgrade(this.layer, 24) || hasUpgrade("c", 61)}
         },
         32: {
             title: "imp3x2",
@@ -774,7 +1090,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasAchievement("ach", 22) && hasUpgrade(this.layer, 31)}
+            unlocked(){return (hasAchievement("ach", 22) && hasUpgrade(this.layer, 31)) || hasUpgrade("c", 61)}
         },
         33: {
             title: "imp3x3",
@@ -788,15 +1104,15 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(30)){
-                    return "+" + format(this.effect()) + "\n{(x*8,100,000)^(1/6)} (softcapped)";
+                    return "+" + format(this.effect()) + "<br>{(x*8,100,000)^(1/6)} (softcapped)";
                 }
-                return "+" + format(this.effect()) + "\n{(x*10)^0.5}";
+                return "+" + format(this.effect()) + "<br>{(x*10)^0.5}";
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 32)}
+            unlocked(){return hasUpgrade(this.layer, 32) || hasUpgrade("c", 61)}
         },
         41: {
             title: "imp4x1",
@@ -810,15 +1126,15 @@ addLayer("i", {
             },
             effectDisplay(){
                 if(this.effect().gte(30)){
-                    return "+" + format(this.effect()) + "\n{(x*36,726,822)^0.15} (softcapped)";
+                    return "+" + format(this.effect()) + "<br>{(x*36,726,822)^0.15} (softcapped)";
                 }
-                return "+" + format(this.effect()) + "\n{(x*10)^0.45}";
+                return "+" + format(this.effect()) + "<br>{(x*10)^0.45}";
             },
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 33)}
+            unlocked(){return hasUpgrade(this.layer, 33) || hasUpgrade("c", 61)}
         },
         42: {
             title: "imp4x2",
@@ -827,7 +1143,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 41)}
+            unlocked(){return hasUpgrade(this.layer, 41) || hasUpgrade("c", 61)}
         },
         51: {
             title: "imp5x1",
@@ -856,11 +1172,19 @@ addLayer("i", {
         "upgrade"() { return {
             width:"160px",
             height:"160px",
+        }},
+        "prestige-button"() { return {
+            width:"600px",
+            height:"60px",
+            "font-size":"16px",
+            "line-height":"80%",
+            "margin-bottom":"10px",
         }}
     },
     tabFormat: [
         "main-display",
         "prestige-button",
+        "clickables",
         "blank",
         ["raw-html",
             function(){
@@ -869,5 +1193,602 @@ addLayer("i", {
         "blank",
         "upgrades"
     ],
+    doReset(resettingLayer){
+        if(layers[resettingLayer].row > this.row){
+            layerDataReset(this.layer, ["autoReset", "autoImprove"]);
+            if(hasChallenge("c", 11)){
+                player.i.points = new Decimal(2);
+                player.i.upgrades = ["11", "12"];
+            };
+            if(hasUpgrade("c", 22)){
+                player.i.points = new Decimal(10);
+                player.i.unspent = new Decimal(8);
+            }
+            if(hasUpgrade("c", 62)){
+                player.i.unspent = player.i.unspent.plus(20);
+            }
+        };
+    },
+    resetsNothing() { return hasUpgrade("c", 31) },
     layerShown(){return (getBuyableAmount("g", 31).gte(1) || hasAchievement("ach", "14"))}
+})
+
+addLayer("c", {
+    name: "Collapse",
+    symbol: "C",
+    position: 0,
+    startData() { return {
+        unlocked: false,
+        points: new Decimal(0),
+        total: new Decimal(0),
+        resetTime: 0,
+        bestTime: 999999999,
+        resetCount: new Decimal(0),
+        segments: new Decimal(0),
+        bought: ["This array is not zero-indexed either", new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+    }},
+    color: "#98509f",
+    resource: "collapse energy",
+    row: 2,
+    branches: ["g"],
+    type: "normal",
+    baseResource: "points",
+    baseAmount() {return player.points},
+    requires() {return new Decimal(2).pow(1024)},
+    exponent: 0.0129762816,
+    gainExp(){
+        if(infinityAt() == 1024){
+            return new Decimal(0.1);
+        };
+            return new Decimal(1);
+    },
+    resetDescription: "Collapse the universe to generate ",
+    onPrestige(gain){
+        player[this.layer].bestTime = Math.min(player[this.layer].bestTime, player[this.layer].resetTime);
+        
+        var resetsToGain = new Decimal(1);
+        player[this.layer].resetCount = player[this.layer].resetCount.plus(resetsToGain);
+    },
+    doReset(resettingLayer){
+        if(layers[resettingLayer].row > this.row){
+            layerDataReset(this.layer);
+        };
+        for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+            setBuyableAmount("c", (i * 10 + 1), player[this.layer].bought[i]);
+        };
+        if(!hasUpgrade("c", 72)){
+            player.c.segments = new Decimal(0);
+        };
+    },
+    effect(){
+        var segmentPower = 0.15;
+        if(hasUpgrade("c", 21)){
+            segmentPower += 0.1;
+            if(hasUpgrade("c", 51)){
+                segmentPower += 0.1;
+            }
+        }
+        if(inChallenge("c", 9001) && hasUpgrade("c", 32)){
+            segmentPower += 0.5;
+            if(hasUpgrade("c", 51)){
+                segmentPower += 0.5;
+            }
+        }
+        if(hasUpgrade("c", 72)){
+            segmentPower += 0.65;
+        }
+        return {
+            segPow: segmentPower,
+            segMult: new Decimal(1).plus(player.c.segments.pow(segmentPower)),
+        };
+    },
+    //IMPORTANT: Number of currently implemented buyables on this layer.
+    totalBuyables: 3,
+    //[Max all]
+    maxAll(){
+        for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+            if(layers[this.layer].buyables[i * 10 + 1].unlocked()){
+                while(layers[this.layer].buyables[i * 10 + 1].canAfford()){
+                    this.buyAThing([i * 10 + 1], layers[this.layer].buyables[i * 10 + 1].cost());
+                }
+            }
+        }
+    },
+    clickables: {
+        rows: 1,
+        cols: 69,
+        11: {
+            display() {return "<h2>Max all [Shift+M]</h2>"},
+            canClick(){
+                for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+                    if(layers[this.layer].buyables[i * 10 + 1].canAfford() && layers[this.layer].buyables[i * 10 + 1].unlocked()){
+                        return true;
+                    }
+                }
+            },
+            onClick(){
+                layers[this.layer].maxAll();
+            },
+            style: {
+                width:"200px",
+                height:"40px",
+            }
+        }
+    },
+    //Smells like copypasta.
+    //Returns the multiplier for a given buyable.
+    calcMult(id){
+        var result = new Decimal(1.3);
+        if(hasChallenge("c", 21)){
+            result = result.plus(0.065);
+        }
+        result = result.pow(layers[this.layer].calcEffBought(id));
+        if(hasUpgrade("c", 41)){
+            result = result.times(upgradeEffect("c", 41));
+            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+                result = result.times(upgradeEffect("c", 41));
+            }
+        }
+        result = result.times(0.1);
+        return result;
+    },
+    //Returns the effective bought amount for a given buyable.
+    //Featuring a ridiculous amount of if() statements.
+    calcEffBought(id){
+        var result = player[this.layer].bought[Math.floor(id / 10)];
+        if(id == 21 && hasUpgrade("c", 23)){
+            result = result.plus(4);
+            if(hasUpgrade("c", 51)){
+                result = result.plus(4);
+            }
+        }
+        if(id == 11 && hasUpgrade("c", 71)){
+            result = result.plus(16);
+        };
+        return result;
+    },
+    //Returns the cost for a given buyable.
+    calcCost(id, base, cml, cmi){
+        var result = new Decimal(base);
+        var cmult = new Decimal(cml);
+        var cminc = new Decimal(cmi);
+        result = result.times(cmult.pow(player[this.layer].bought[Math.floor(id / 10)]));
+        if(result.gte(1e30)){
+            result = result.pow(player[this.layer].bought[Math.floor(id / 10)].times(cminc).plus(1));
+        }
+        return result;
+    },
+    //Returns the display for a given buyable.
+    calcDisplay(id, name, base, cml, cmi){
+        return "<h2>" + name + ": " + format(getBuyableAmount(this.layer, id))
+               + " (x" + format(layers[this.layer].calcMult(id)) + ")\n"
+               + "Bought: " + formatWhole(player[this.layer].bought[Math.floor(id / 10)])
+               + " (eff. " + format(layers[this.layer].calcEffBought(id))
+               + ") | Cost: " + format(layers[this.layer].calcCost(id, base, cml, cmi)) + " CE</h2>"
+    },
+    //Buys a given buyable.
+    buyAThing(id, cost){
+        player.c.points = player.c.points.sub(cost);
+        player[this.layer].bought[Math.floor(id / 10)] = player[this.layer].bought[Math.floor(id / 10)].plus(1);
+        setBuyableAmount(this.layer, id, getBuyableAmount(this.layer, id).add(1))
+    },
+    buyables: {
+        rows: 3,
+        cols: 1,
+        11: {
+            //cost(){ return new Decimal(69) },
+            //display() { return "Donkey" },
+            mult(){
+                return layers[this.layer].calcMult(this.id);
+            },
+            effBought(){
+                return layers[this.layer].calcEffBought(this.id);
+            },
+            cost(){
+                return layers[this.layer].calcCost(this.id, 1, 512, 0.05);
+            },
+            display() {
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Triangles", 1, 512, 0.05);
+            },
+            canAfford() { return player.c.points.gte(this.cost()) },
+            buy() {
+                layers[this.layer].buyAThing(this.id, this.cost())
+            },
+            //need this for maxAll to work
+            unlocked() { return true },
+        },
+        21: {
+            //cost(){ return new Decimal(69) },
+            //display() { return "Donkey" },
+            mult(){
+                return layers[this.layer].calcMult(this.id);
+            },
+            effBought(){
+                return layers[this.layer].calcEffBought(this.id);
+            },
+            cost(){
+                return layers[this.layer].calcCost(this.id, 4, 2048, 0.1);
+            },
+            display() {
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Pyramids", 4, 2048, 0.1);
+            },
+            canAfford() { return player.c.points.gte(this.cost()) },
+            buy() {
+                layers[this.layer].buyAThing(this.id, this.cost())
+            },
+            unlocked() { return getBuyableAmount(this.layer, 11).gte(1)}
+        },
+        31: {
+            //cost(){ return new Decimal(69) },
+            //display() { return "Donkey" },
+            mult(){
+                return layers[this.layer].calcMult(this.id);
+            },
+            effBought(){
+                return layers[this.layer].calcEffBought(this.id);
+            },
+            cost(){
+                return layers[this.layer].calcCost(this.id, 32, 8192, 0.15);
+            },
+            display() {
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Pentachorons", 32, 8192, 0.15);
+            },
+            canAfford() { return player.c.points.gte(this.cost()) },
+            buy() {
+                layers[this.layer].buyAThing(this.id, this.cost())
+            },
+            unlocked() { return getBuyableAmount(this.layer, 21).gte(1) && hasChallenge("c", 31)},
+        },
+    },
+    shouldNotify(){
+        for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+            if(layers[this.layer].buyables[i * 10 + 1].canAfford() && layers[this.layer].buyables[i * 10 + 1].unlocked()){
+                return true;
+            }
+        }
+    },
+    update(diff){
+        player.c.segments = player.c.segments.plus(getBuyableAmount("c", 11).times(layers.c.buyables[11].mult()).times(diff));
+        for(var i = 1; i < layers[this.layer].totalBuyables; i++){
+            setBuyableAmount(this.layer, (i * 10 + 1), getBuyableAmount(this.layer, (i * 10 + 1)).plus(getBuyableAmount(this.layer, (i * 10 + 11)).times(layers[this.layer].buyables[(i * 10 + 11)].mult()).times(diff)));
+        }
+    },
+    
+    upgrades: {
+        rows: 99,
+        cols: 4,
+        11: {
+            title: "clp1x1",
+            description: "Multiplies Line Segments by 64.",
+            cost: new Decimal(1),
+        },
+        12: {
+            title: "clp1x2",
+            description: "Multiplies Tesseracts by 256.",
+            cost: new Decimal(1),
+        },
+        21: {
+            title: "clp2x1",
+            description: "Increases the CS exponent by 0.1.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(4),
+            unlocked(){return player[this.layer].total.gte(3)}
+        },
+        22: {
+            title: "clp2x2",
+            description: "Start with 10 IP.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(32),
+            unlocked(){return hasChallenge("c", 11)},
+        },
+        23: {
+            title: "clp2x3",
+            description: "Gain 4 free bought Collapsed Pyramids.",
+            cost: new Decimal(8),
+            unlocked(){return hasUpgrade("c", 22)},
+        },
+        31: {
+            title: "clp3x1",
+            description: "Improvement resets reset nothing.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(128),
+            unlocked(){return hasUpgrade("c", 22)},
+        },
+        32: {
+            title: "clp3x2",
+            description: "Increases the CS exponent by 0.5, but only in challenges.",
+            cost: new Decimal(16),
+            unlocked(){return hasUpgrade("c", 22)},
+        },
+        41: {
+            title: "clp4x1",
+            description: "Multiply all Collapse buyables by the square root of your total IP.",
+            effect(){
+                return player.i.points.pow(0.5);
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            cost: new Decimal(32),
+            unlocked(){return hasChallenge("c", 21)},
+        },
+        42: {
+            title: "clp4x2",
+            description: "Improvement Points are 10% cheaper for every TRUE bought Geometry buyable.",
+            effect(){
+                var result = new Decimal(0);
+                for(var i = 1; i <= layers.g.totalBuyables; i++){
+                    result = result.plus(player.g.bought[i]);
+                }
+                return new Decimal(10).div(9).pow(result);
+            },
+            effectDisplay(){
+                return "cost /= " + format(this.effect());
+            },
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(16384),
+            unlocked(){return hasChallenge("c", 21)},
+        },
+        43: {
+            title: "clp4x3",
+            description: "Multiply all Geometry buyables by the square root of your total CE.",
+            effect(){
+                return player.c.total.pow(0.5);
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(32768),
+            unlocked(){return hasChallenge("c", 21)},
+        },
+        51: {
+            title: "clp5x1",
+            description: "This upgrade clones the effects of the first seven Collapse Upgrades.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(65536),
+            unlocked(){return hasChallenge("c", 21)},
+        },
+        52: {
+            title: "clp5x2",
+            description: "This upgrade clones the effects of row 4 Collapse Upgrades AND triples the effect of {imp5x1}, but only in challenges.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(131072),
+            unlocked(){return hasChallenge("c", 21)},
+        },
+        61: {
+            title: "clp6x1",
+            description: "The first 12 Improvements are always unlocked.",
+            cost: new Decimal(32),
+            unlocked(){return hasChallenge("c", 22)},
+        },
+        62: {
+            title: "clp6x2",
+            description: "Start with 20 extra unspent IP.",
+            cost: new Decimal(64),
+            unlocked(){return hasUpgrade("c", 61)},
+        },
+        63: {
+            title: "clp6x3",
+            description: "Start with 1.16e77 points.",
+            cost: new Decimal(128),
+            unlocked(){return hasUpgrade("c", 61)},
+        },
+        71: {
+            title: "clp7x1",
+            description: "Gain 16 free bought Collapsed Triangles.",
+            cost: new Decimal(160),
+            unlocked(){return hasUpgrade("c", 63)},
+        },
+        72: {
+            title: "clp7x2",
+            description(){
+                var cchint = "";
+                if(player.c.segments.gte(16777216) && !inChallenge("c", 9001) && !hasUpgrade("c", 72)){
+                    cchint = "<br>(Hint: You can buy this in a challenge!)"
+                }
+                return  "Your Collapsed Segments do not reset on Collapse, and the CS exponent is increased by 0.65." + cchint;
+            },
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            cost: new Decimal(4294967296),
+            unlocked(){return hasUpgrade("c", 63)},
+        },
+        81: {
+            title: "clp8x1",
+            description: "Square the limit on Points, significantly improve the CE formula, and unlock a new set of upgrades.",
+            cost: new Decimal(330),
+            unlocked(){return hasUpgrade("c", 72)},
+        },
+    },
+    
+    challenges: {
+        rows: 3,
+        cols: 2,
+        11: {
+            name: "Spendthrift",
+            challengeDescription: "Bonuses based on total IP instead scale off of <i>unspent</i> IP.",
+            goalDescription: "Collapse the universe.",
+            canComplete(){return canReset("c")},
+            onComplete(){
+                doReset(this.layer);
+            },
+            rewardDescription: "AUTOMATIC. MAX. ALL. <br>Also start with 2 IP and the first two Improvements.",
+            countsAs: [9001], //For effects that work in any challenge
+        },
+        21: {
+            name: "Free to Play",
+            challengeDescription: "Only free bought Geometry buyables increase multiplier, BUT the multiplier for each bought Geometry buyable is increased by 0.65.",
+            goalDescription: "Collapse the universe.",
+            canComplete(){return canReset("c")},
+            onComplete(){
+                doReset(this.layer);
+            },
+            rewardDescription: "Unlock Automatic IP Resets, and the multiplier for each bought Geometry and Collapse buyable is increased by 0.065.",
+            unlocked(){ return hasChallenge("c", 11)},
+            countsAs: [9001], //For effects that work in any challenge
+        },
+        22: {
+            name: "Pay to Win",
+            challengeDescription: "Free bought Geometry buyables do nothing, BUT the effect of {imp1x1} is raised to the power of (owned improvements)^1.2.",
+            goalDescription: "Collapse the universe.",
+            canComplete(){return canReset("c")},
+            onComplete(){
+                doReset(this.layer);
+            },
+            rewardDescription: "Unlock Automatic Improvements, and the effect of {imp1x1} is raised to the power of (owned improvements)^0.4.",
+            rewardEffect(){
+                return Math.pow(player.i.upgrades.length, 0.4);
+            },
+            rewardDisplay(){
+                return "Currently: ^" + format(this.rewardEffect());
+            },
+            unlocked(){ return hasChallenge("c", 21)},
+            countsAs: [9001], //For effects that work in any challenge
+        }
+    },
+    
+    hotkeys: [
+        {key: "c", description: "C: Collapse the universe", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "M", description: "Shift+M: Max all (Collapse layer)", onPress(){layers[this.layer].maxAll()}}
+    ],
+    componentStyles: {
+        "prestige-button"() { return {
+            width:"600px",
+            height:"60px",
+            "font-size":"16px",
+            "line-height":"80%",
+            "margin-bottom":"10px",
+        }},
+        "buyable"() { return {
+            width:"600px",
+            height:"60px",
+            "margin-bottom":"10px",
+        }},
+        "upgrade"() { return {
+            width:"160px",
+            height:"160px",
+        }},
+    },
+    microtabs: {
+        energyStuff: {
+            "This button shouldn't be visible": {
+                content: [
+                    "blank",
+                    ["raw-html",
+                        function(){
+                            return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + formatWhole(player.c.points) + "</h2> collapse energy"
+                        }],
+                    "blank",
+                    ["raw-html",
+                        function(){
+                            return "You have generated a total of <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.total) + "</b> CE."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "You have collapsed the universe <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.resetCount) + "</b> times in total."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "You have spent <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.resetTime) + "</b> in this universe."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "Your fastest collapse took <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.bestTime) + "</b>."
+                        }],
+                    "blank",
+                    "prestige-button",
+                    "blank",
+                ],
+                style: {
+                    "margin": "20px 40px",
+                },
+                buttonStyle: {
+                    "display": "none",
+                }
+            }
+        },
+        actualContent: {
+            "Buyables": {
+                content: [
+                    ["raw-html",
+                        function(){
+                            return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.<br>All Geometry multipliers are multiplied by (CS^<b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(layers.c.effect().segPow) + "</b>+1) = <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(layers.c.effect().segMult) + "</h2>.";
+                        }],
+                    "blank",
+                    "clickables",
+                    "blank",
+                    "buyables",
+                ],
+                style: {
+                    "background-color": "#241230",
+                },
+                buttonStyle: {
+                    "background-color": "#241230",
+                    "border-color": "#c3ade3",
+                },
+            },
+            "Upgrades": {
+                content: [
+                    ["raw-html",
+                        function(){
+                            return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.";
+                        }],
+                    "blank",
+                    "upgrades",
+                ],
+                style: {
+                    "background-color": "#1f1e33",
+                },
+                buttonStyle: {
+                    "background-color": "#1f1e33",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return player.c.resetCount.gte(2);
+                }
+            },
+            "Challenges": {
+                content: [
+                    ["raw-html",
+                        function(){
+                            return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.";
+                        }],
+                    "blank",
+                    "challenges",
+                ],
+                style: {
+                    "background-color": "#301224",
+                },
+                buttonStyle: {
+                    "background-color": "#301224",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return player.c.resetCount.gte(3);
+                }
+            },
+        }
+    },
+    tabFormat: [
+        ["microtabs", "energyStuff"],
+        "blank",
+        ["microtabs", "actualContent"]
+    ],
+    layerShown(){return (player.i.points.gte(124) || hasAchievement("ach", "25"))}
 })
