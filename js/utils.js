@@ -90,7 +90,7 @@ function toPlaces(x, precision, maxAccepted) {
 // ************ Save stuff ************
 
 function save() {
-	localStorage.setItem(modInfo.id, btoa(JSON.stringify(player)))
+	localStorage.setItem(modInfo.id, btoa(deGreekify(JSON.stringify(player))))
 }
 
 function startPlayerBase() {
@@ -253,7 +253,7 @@ function fixData(defaultData, newData) {
 function load() {
 	let get = localStorage.getItem(modInfo.id);
 	if (get===null || get===undefined) player = getStartPlayer()
-	else player = Object.assign(getStartPlayer(), JSON.parse(atob(get)))
+	else player = Object.assign(getStartPlayer(), JSON.parse(reGreekify(atob(get))))
 	fixSave()
 
 	if (player.offlineProd) {
@@ -311,7 +311,7 @@ function NaNcheck(data) {
 
 
 function exportSave() {
-	let str = btoa(JSON.stringify(player))
+	let str = btoa(deGreekify(JSON.stringify(player)))
 	
 	const el = document.createElement("textarea");
 	el.value = str;
@@ -325,7 +325,7 @@ function exportSave() {
 function importSave(imported=undefined, forced=false) {
 	if (imported===undefined) imported = prompt("Paste your save here")
 	try {
-		tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)))
+		tempPlr = Object.assign(getStartPlayer(), JSON.parse(reGreekify(atob(imported))))
 		if(tempPlr.versionType != modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) // Wrong save (use "Forced" to force it to accept.)
 			return
 		player = tempPlr;

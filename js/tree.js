@@ -8,9 +8,27 @@ var layoutInfo = {
 }
 
 
-// A "ghost" layer which offsets other layers in the tree
-addNode("blank", {
-    layerShown: "ghost",
+// Ghost nodes
+addNode("g0", {
+    row: 1,
+    position: -1,
+    layerShown(){
+        if(layers.e.layerShown()){
+            return "ghost";
+        }
+        return false;
+    },
+}, 
+)
+addNode("g1", {
+    row: 2,
+    position: 1,
+    layerShown(){
+        if(layers.e.layerShown()){
+            return "ghost";
+        }
+        return false;
+    },
 }, 
 )
 

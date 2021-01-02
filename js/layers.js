@@ -424,6 +424,81 @@ addLayer("ach", {
                 return "../images/locked/ach_c.png";
             },
         },
+        36: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "stretch-infinity.js";
+                }
+                return "???????????????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(25)){
+                    return "Requirement shown at 25 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Expanded the universe's limit to 2^2,048 Points. (3AP)";
+                }
+                return "Buy the Collapse upgrade {c8x1}. (3AP)";
+            },
+            done(){return hasUpgrade("c", 81)},
+            onComplete(){player.ach.points = player.ach.points.plus(3)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        41: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "No, I did not make that name up";
+                }
+                return "??? ? ??? ??? ???? ???? ???? ??";
+            },
+            tooltip(){
+                if(player.ach.points.lt(25)){
+                    return "Requirement shown at 25 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Got a Collapsed Pentachoron. \n ...yes, I Googled it. (2AP)";
+                }
+                return "Get a third-tier Collapse buyable. (2AP)";
+            },
+            done(){return getBuyableAmount("c", 31).gte(1)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        42: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "[ONE DIMENSION]";
+                }
+                return "???? ??????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(25)){
+                    return "Requirement shown at 25 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed Collapse Challenge 4. (2AP)";
+                }
+                return "Complete Collapse Challenge 4. (2AP)";
+            },
+            done(){return hasChallenge("c", 111)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
     },
     componentStyles: {
         "achievement"() { return {
@@ -435,7 +510,11 @@ addLayer("ach", {
         "main-display",
         "blank","blank","blank",
         "achievements"
-    ]
+    ],
+    //Do things in mod.js that don't automagically run every tick but need to
+    doThisEveryTick(){
+        capPoints();
+    }
 })
 
 addLayer("scr", {
@@ -626,6 +705,7 @@ addLayer("g", {
             style: {
                 width:"150px",
                 height:"40px",
+                "border-radius":"20px",
             }
         },
         12: {
@@ -636,6 +716,7 @@ addLayer("g", {
             style: {
                 width:"150px",
                 height:"40px",
+                "border-radius":"20px",
             }
         }
     },
@@ -650,7 +731,7 @@ addLayer("g", {
         }
         if(hasUpgrade("i", 51)){
             result = result.plus(0.033);
-            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+            if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 52)){
                 result = result.plus(0.066);
             }
         }
@@ -685,9 +766,25 @@ addLayer("g", {
         }
         if(hasUpgrade("c", 43)){
             result = result.times(upgradeEffect("c", 43));
-            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+            if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 52)){
                 result = result.times(upgradeEffect("c", 43));
             }
+        }
+        //Enhancement multipliers
+        if(hasUpgrade("e", 22)){
+            result = result.times(upgradeEffect("e", 22));
+        }
+        //CC4 effect
+        if(inChallenge("c", 111)){
+            if(id == 11){
+                result = result.pow(2);
+            } else {
+                result = new Decimal(1);
+            }
+        }
+        //Exponentiators go last
+        if(id == 11 && hasChallenge("c", 111)){
+            result = result.pow(1.05);
         }
         return result;
     },
@@ -799,7 +896,7 @@ addLayer("g", {
             buy() {
                 layers[this.layer].buyAThing(this.id, this.cost())
             },
-            unlocked() { return getBuyableAmount(this.layer, 11).gte(1)}
+            unlocked() { return (getBuyableAmount(this.layer, 11).gte(1) && !inChallenge("c", 111))}
         },
         31: {
             //cost(){ return new Decimal(69) },
@@ -820,7 +917,7 @@ addLayer("g", {
             buy() {
                 layers[this.layer].buyAThing(this.id, this.cost())
             },
-            unlocked() { return getBuyableAmount(this.layer, 21).gte(1)}
+            unlocked() { return (getBuyableAmount(this.layer, 21).gte(1) && !inChallenge("c", 111))}
         },
         41: {
             //cost(){ return new Decimal(69) },
@@ -841,7 +938,7 @@ addLayer("g", {
             buy() {
                 layers[this.layer].buyAThing(this.id, this.cost())
             },
-            unlocked() { return getBuyableAmount(this.layer, 31).gte(1) && hasAchievement("ach", 22)}
+            unlocked() { return (getBuyableAmount(this.layer, 31).gte(1) && hasAchievement("ach", 22) && !inChallenge("c", 111))}
         }
     },
     shouldNotify(){
@@ -869,6 +966,7 @@ addLayer("g", {
             width:"600px",
             height:"60px",
             "margin-bottom":"10px",
+            "border-radius":"15px",
         }}
     },
     tabFormat: [
@@ -912,7 +1010,7 @@ addLayer("i", {
         var result = new Decimal(1);
         if(hasUpgrade("c", 42)){
             result = result.div(upgradeEffect("c", 42));
-            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+            if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 52)){
                 result = result.times(upgradeEffect("c", 43));
             }
         };
@@ -933,6 +1031,7 @@ addLayer("i", {
             style: {
                 width:"200px",
                 height:"40px",
+                "border-radius":"20px",
             }
         },
         12: {
@@ -943,6 +1042,7 @@ addLayer("i", {
             style: {
                 width:"200px",
                 height:"40px",
+                "border-radius":"20px",
             }
         },
     },
@@ -1179,6 +1279,7 @@ addLayer("i", {
             "font-size":"16px",
             "line-height":"80%",
             "margin-bottom":"10px",
+            "border-radius":"15px",
         }}
     },
     tabFormat: [
@@ -1226,6 +1327,21 @@ addLayer("c", {
         resetCount: new Decimal(0),
         segments: new Decimal(0),
         bought: ["This array is not zero-indexed either", new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+        //Format: [time in seconds, CE gained, stat gained]
+        last8: [
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+            [0, new Decimal(0), new Decimal(0)],
+        ],
+        ppsPeak: new Decimal(0),
+        autoReset: false,
+        autoSetting: 0.2,
+        autoTimer: 0,
     }},
     color: "#98509f",
     resource: "collapse energy",
@@ -1245,9 +1361,17 @@ addLayer("c", {
     resetDescription: "Collapse the universe to generate ",
     onPrestige(gain){
         player[this.layer].bestTime = Math.min(player[this.layer].bestTime, player[this.layer].resetTime);
-        
+        //Mess with reset count gain here
         var resetsToGain = new Decimal(1);
+        
         player[this.layer].resetCount = player[this.layer].resetCount.plus(resetsToGain);
+        
+        //Stat-tracking
+        for(var i = 7; i > 0; i--){
+            player[this.layer].last8[i] = player[this.layer].last8[i - 1];
+        }
+        player[this.layer].last8[0] = [player[this.layer].resetTime, getResetGain(this.layer), resetsToGain];
+        player[this.layer].ppsPeak = new Decimal(0);
     },
     doReset(resettingLayer){
         if(layers[resettingLayer].row > this.row){
@@ -1260,6 +1384,40 @@ addLayer("c", {
             player.c.segments = new Decimal(0);
         };
     },
+    getPointsPerSecond(){
+        var result = getResetGain("c").div(player.c.resetTime);
+        if(Number.isNaN(result.mag)){
+            result = new Decimal(0);
+        };
+        return result
+    },
+    displayLast8(index){
+        var result = index + ": "
+        var resetData = player[this.layer].last8[index];
+        if(resetData[2].eq(0)){
+            return "";
+        };
+        result = result + "took " + formatTime(resetData[0]);
+        result = result + ", giving " + formatWhole(resetData[1]);
+        result = result + " CE and " + formatWhole(resetData[2]);
+        result = result + " Collapse count. <br>(";
+        var pointsPerTime = resetData[1].div(resetData[0]).times(60);
+        if(pointsPerTime.gte(60)){
+            pointsPerTime = pointsPerTime.div(60);
+            result = result + format(pointsPerTime) + " CE/sec, ";
+        } else {
+            result = result + format(pointsPerTime) + " CE/min, ";
+        }
+        var statPerTime = resetData[2].div(resetData[0]).times(60);
+        if(statPerTime.gte(60)){
+            statPerTime = statPerTime.div(60);
+            result = result + format(statPerTime) + " resets/sec)<br><br>";
+        } else {
+            result = result + format(statPerTime) + " resets/min)<br><br>";
+        }
+        return result;
+        
+    },
     effect(){
         var segmentPower = 0.15;
         if(hasUpgrade("c", 21)){
@@ -1268,7 +1426,7 @@ addLayer("c", {
                 segmentPower += 0.1;
             }
         }
-        if(inChallenge("c", 9001) && hasUpgrade("c", 32)){
+        if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 32)){
             segmentPower += 0.5;
             if(hasUpgrade("c", 51)){
                 segmentPower += 0.5;
@@ -1295,8 +1453,8 @@ addLayer("c", {
         }
     },
     clickables: {
-        rows: 1,
-        cols: 69,
+        rows: 2,
+        cols: 9,
         11: {
             display() {return "<h2>Max all [Shift+M]</h2>"},
             canClick(){
@@ -1312,6 +1470,48 @@ addLayer("c", {
             style: {
                 width:"200px",
                 height:"40px",
+                "border-radius":"20px",
+            }
+        },
+        21: {
+            display() { return "<h2>Auto-Collapse: " + player[this.layer].autoReset + "</h2>" },
+            unlocked(){ return hasAchievement("ach", 42) },
+            canClick(){ return this.unlocked() },
+            onClick() { player[this.layer].autoReset = !player[this.layer].autoReset },
+            style: {
+                width:"240px",
+                height:"40px",
+                "border-radius":"20px",
+            }
+        },
+        22: {
+            display: "-",
+            unlocked(){ return hasAchievement("ach", 42) },
+            canClick(){ return this.unlocked() },
+            onClick() {
+                if(player.c.autoSetting > 0.06){
+                    player.c.autoSetting -= 0.05;
+                };
+            },
+            style: {
+                width:"24px",
+                height:"24px",
+                "border-radius":"8px",
+            }
+        },
+        23: {
+            display: "+",
+            unlocked(){ return hasAchievement("ach", 42) },
+            canClick(){ return this.unlocked() },
+            onClick() {
+                if(player.c.autoSetting < 1.99){
+                    player.c.autoSetting += 0.05;
+                };
+            },
+            style: {
+                width:"24px",
+                height:"24px",
+                "border-radius":"8px",
             }
         }
     },
@@ -1325,9 +1525,12 @@ addLayer("c", {
         result = result.pow(layers[this.layer].calcEffBought(id));
         if(hasUpgrade("c", 41)){
             result = result.times(upgradeEffect("c", 41));
-            if(inChallenge("c", 9001) && hasUpgrade("c", 52)){
+            if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 52)){
                 result = result.times(upgradeEffect("c", 41));
             }
+        }
+        if(hasUpgrade("e", 11)){
+            result = result.times(upgradeEffect("e", 11));
         }
         result = result.times(0.1);
         return result;
@@ -1336,6 +1539,9 @@ addLayer("c", {
     //Featuring a ridiculous amount of if() statements.
     calcEffBought(id){
         var result = player[this.layer].bought[Math.floor(id / 10)];
+        if(hasUpgrade("c", 113)){
+            result = result.times(8);
+        }
         if(id == 21 && hasUpgrade("c", 23)){
             result = result.plus(4);
             if(hasUpgrade("c", 51)){
@@ -1437,7 +1643,7 @@ addLayer("c", {
             buy() {
                 layers[this.layer].buyAThing(this.id, this.cost())
             },
-            unlocked() { return getBuyableAmount(this.layer, 21).gte(1) && hasChallenge("c", 31)},
+            unlocked() { return getBuyableAmount(this.layer, 21).gte(1) && hasUpgrade("c", 121)},
         },
     },
     shouldNotify(){
@@ -1452,11 +1658,22 @@ addLayer("c", {
         for(var i = 1; i < layers[this.layer].totalBuyables; i++){
             setBuyableAmount(this.layer, (i * 10 + 1), getBuyableAmount(this.layer, (i * 10 + 1)).plus(getBuyableAmount(this.layer, (i * 10 + 11)).times(layers[this.layer].buyables[(i * 10 + 11)].mult()).times(diff)));
         }
+        var currentPPS = layers[this.layer].getPointsPerSecond();
+        if(currentPPS > player[this.layer].ppsPeak){
+            player[this.layer].autoTimer = 0;
+            player[this.layer].ppsPeak = currentPPS;
+        } else {
+            player[this.layer].autoTimer += diff;
+            if(player[this.layer].autoReset && player[this.layer].autoTimer > player[this.layer].autoSetting){
+                doReset(this.layer);
+            }
+        }
     },
     
     upgrades: {
         rows: 99,
         cols: 4,
+        //Upgrades α
         11: {
             title: "clp1x1",
             description: "Multiplies Line Segments by 64.",
@@ -1611,15 +1828,50 @@ addLayer("c", {
         },
         81: {
             title: "clp8x1",
-            description: "Square the limit on Points, significantly improve the CE formula, and unlock a new set of upgrades.",
+            description: "Square the limit on Points, significantly improve the CE formula, and unlock a new set of upgrades and challenges.",
             cost: new Decimal(330),
             unlocked(){return hasUpgrade("c", 72)},
+        },
+        //Upgrades β
+        111: {
+            title: "clp11x1",
+            description: "Unlock Enhancements.",
+            cost: new Decimal(512),
+            unlocked(){return hasUpgrade("c", 81)},
+        },
+        112: {
+            title: "clp11x2",
+            description: "Multiply Enhancement Point gain by the fifth root of your total Collapse count plus one.",
+            effect(){
+                return player.c.resetCount.pow(0.2).plus(1);
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            cost: new Decimal(4096),
+            unlocked(){return hasUpgrade("c", 111)},
+        },
+        113: {
+            title: "clp11x3",
+            description: "Gain 7 free bought Collapse buyables for each one you actually buy.",
+            cost: new Decimal(8192),
+            unlocked(){return hasUpgrade("c", 111)},
+        },
+        121: {
+            title: "clp12x1",
+            description: "Unlock Collapsed Pentachorons.",
+            cost: new Decimal(2.8147498e14),
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "Collapsed Segments",
+            currencyInternalName: "segments",
+            unlocked(){return hasUpgrade("e", 21)},
         },
     },
     
     challenges: {
-        rows: 3,
+        rows: 99,
         cols: 2,
+        //Challenges α
         11: {
             name: "Spendthrift",
             challengeDescription: "Bonuses based on total IP instead scale off of <i>unspent</i> IP.",
@@ -1656,10 +1908,29 @@ addLayer("c", {
                 return Math.pow(player.i.upgrades.length, 0.4);
             },
             rewardDisplay(){
-                return "Currently: ^" + format(this.rewardEffect());
+                return "^" + format(this.rewardEffect());
             },
             unlocked(){ return hasChallenge("c", 21)},
             countsAs: [9001], //For effects that work in any challenge
+        },
+        //Challenges β
+        111: {
+            name: "One-Dimensional",
+            challengeDescription(){
+                var desc = "Line Segments' multiplier is squared. All other Geometry buyables are locked.";
+                if(player.c.resetTime > 30 && !this.canComplete()){
+                    desc = desc + "<br><b>Hint: Are you sure you have enough Collapsed Segments?</b>"
+                };
+                return desc;
+            },
+            goalDescription: "Collapse the universe.",
+            canComplete(){return canReset("c")},
+            onComplete(){
+                doReset(this.layer);
+            },
+            rewardDescription: "Unlock Automatic Collapse, and Line Segments' multiplier is raised to the power of 1.05.",
+            unlocked(){ return hasUpgrade("c", 81)},
+            countsAs: [9001],
         }
     },
     
@@ -1674,15 +1945,23 @@ addLayer("c", {
             "font-size":"16px",
             "line-height":"80%",
             "margin-bottom":"10px",
+            "border-radius":"15px",
         }},
         "buyable"() { return {
             width:"600px",
             height:"60px",
             "margin-bottom":"10px",
+            "border-radius":"15px",
         }},
         "upgrade"() { return {
             width:"160px",
             height:"160px",
+        }},
+        "challenge"() { return {
+            width:"260px",
+            height:"260px",
+            "font-size":"13px",
+            "border-radius":"10%",
         }},
     },
     microtabs: {
@@ -1695,25 +1974,45 @@ addLayer("c", {
                             return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + formatWhole(player.c.points) + "</h2> collapse energy"
                         }],
                     "blank",
-                    ["raw-html",
-                        function(){
-                            return "You have generated a total of <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.total) + "</b> CE."
-                        }],
-                    ["raw-html",
-                        function(){
-                            return "You have collapsed the universe <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.resetCount) + "</b> times in total."
-                        }],
-                    ["raw-html",
-                        function(){
-                            return "You have spent <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.resetTime) + "</b> in this universe."
-                        }],
-                    ["raw-html",
-                        function(){
-                            return "Your fastest collapse took <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.bestTime) + "</b>."
-                        }],
-                    "blank",
                     "prestige-button",
                     "blank",
+                    ["raw-html",
+                        function(){
+                            var pointsPerSecond = layers.c.getPointsPerSecond();
+                            if(pointsPerSecond.lt(1)){
+                                return "(Currently <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(pointsPerSecond.times(60)) + "</b> CE/min)"
+                            } else {
+                                return "(Currently <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(pointsPerSecond) + "</b> CE/sec)"
+                            };
+                        }],
+                    "blank",
+                    ["clickable", 21],
+                    "blank",
+                    ["row", [
+                        ["raw-html", 
+                            function(){
+                                if(hasAchievement("ach", 42)){
+                                    return "Auto-Collapse triggers if CE/sec has not peaked in&nbsp;"
+                                };
+                                return ""
+                            }],
+                        ["clickable", 22],
+                        ["raw-html",
+                            function(){
+                                if(hasAchievement("ach", 42)){
+                                    return "&nbsp;<b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(player.c.autoSetting) + "</b>&nbsp;"
+                                };
+                                return ""
+                            }],
+                        ["clickable", 23],
+                        ["raw-html", 
+                            function(){
+                                if(hasAchievement("ach", 42)){
+                                    return "&nbsp;seconds"
+                                };
+                                return ""
+                            }],
+                    ]]
                 ],
                 style: {
                     "margin": "20px 40px",
@@ -1731,7 +2030,7 @@ addLayer("c", {
                             return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.<br>All Geometry multipliers are multiplied by (CS^<b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(layers.c.effect().segPow) + "</b>+1) = <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(layers.c.effect().segMult) + "</h2>.";
                         }],
                     "blank",
-                    "clickables",
+                    ["clickable", 11],
                     "blank",
                     "buyables",
                 ],
@@ -1749,8 +2048,14 @@ addLayer("c", {
                         function(){
                             return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.";
                         }],
+                    ["raw-html",
+                        function(){ 
+                            return "<span style='color:#1f1e33;'>Don't mind me I'm just here to make the nested microtabs look slightly better</span>"
+                        }],
                     "blank",
-                    "upgrades",
+                    ["microtabs", "upgradeTabs"],
+                    "blank",
+                    "blank",
                 ],
                 style: {
                     "background-color": "#1f1e33",
@@ -1769,8 +2074,14 @@ addLayer("c", {
                         function(){
                             return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.";
                         }],
+                    ["raw-html",
+                        function(){ 
+                            return "<span style='color:#301224;'>Don't mind me I'm just here to make the nested microtabs look slightly better</span>"
+                        }],
                     "blank",
-                    "challenges",
+                    ["microtabs", "challengeTabs"],
+                    "blank",
+                    "blank",
                 ],
                 style: {
                     "background-color": "#301224",
@@ -1783,6 +2094,225 @@ addLayer("c", {
                     return player.c.resetCount.gte(3);
                 }
             },
+            "Stats": {
+                content: [
+                    ["raw-html",
+                        function(){
+                            return "You have <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(player.c.segments) + "</h2> Collapsed Segments.<br>All Geometry multipliers are multiplied by (CS^<b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + format(layers.c.effect().segPow) + "</b>+1) = <h2 style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 10px;'>" + format(layers.c.effect().segMult) + "</h2>.";
+                        }],
+                    "blank", "blank",
+                    ["raw-html",
+                        function(){
+                            return "You have generated a total of <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.total) + "</b> CE."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "You have collapsed the universe <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatWhole(player.c.resetCount) + "</b> times in total."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "You have spent <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.resetTime) + "</b> in this universe."
+                        }],
+                    ["raw-html",
+                        function(){
+                            return "Your fastest collapse took <b style='color:#c3ade3; text-shadow:#c3ade3 0px 0px 8px;'>" + formatTime(player.c.bestTime) + "</b>."
+                        }],
+                    "blank",
+                    "blank",
+                    ["raw-html",
+                        function(){
+                            return "<b>Last 8 Collapse resets:</b>";
+                        }],
+                    "blank",
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(0);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(1);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(2);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(3);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(4);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(5);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(6);
+                        }],
+                    ["raw-html",
+                        function(){
+                            return layers.c.displayLast8(7);
+                        }],
+                    "blank",
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#241230",
+                },
+                buttonStyle: {
+                    "background-color": "#241230",
+                    "border-color": "#c3ade3",
+                },
+            }
+        },
+        upgradeTabs: {
+            "α": {
+                content: [
+                    ["row", [
+                        ["upgrade", 11],
+                        ["upgrade", 12],
+                    ]],
+                    ["row", [
+                        ["upgrade", 21],
+                        ["upgrade", 22],
+                        ["upgrade", 23],
+                    ]],
+                    ["row", [
+                        ["upgrade", 31],
+                        ["upgrade", 32],
+                    ]],
+                    ["row", [
+                        ["upgrade", 41],
+                        ["upgrade", 42],
+                        ["upgrade", 43],
+                    ]],
+                    ["row", [
+                        ["upgrade", 51],
+                        ["upgrade", 52],
+                    ]],
+                    ["row", [
+                        ["upgrade", 61],
+                        ["upgrade", 62],
+                        ["upgrade", 63],
+                    ]],
+                    ["row", [
+                        ["upgrade", 71],
+                        ["upgrade", 72],
+                    ]],
+                    ["row", [
+                        ["upgrade", 81],
+                    ]],
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#1f1e33",
+                    "margin": "20px",
+                },
+                buttonStyle: {
+                    "background-color": "#2f2d4c",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return player.c.resetCount.gte(2);
+                }
+            },
+            "β": {
+                content: [
+                    ["row", [
+                        ["upgrade", 111],
+                        ["upgrade", 112],
+                        ["upgrade", 113],
+                    ]],
+                    ["row", [
+                        ["upgrade", 121],
+                        ["upgrade", 122],
+                    ]],
+                    ["row", [
+                        ["upgrade", 131],
+                        ["upgrade", 132],
+                        ["upgrade", 133],
+                    ]],
+                    ["row", [
+                        ["upgrade", 141],
+                        ["upgrade", 142],
+                    ]],
+                    ["row", [
+                        ["upgrade", 151],
+                        ["upgrade", 152],
+                        ["upgrade", 153],
+                    ]],
+                    ["row", [
+                        ["upgrade", 161],
+                        ["upgrade", 162],
+                    ]],
+                    ["row", [
+                        ["upgrade", 171],
+                    ]],
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#1f1e33",
+                    "margin": "20px",
+                },
+                buttonStyle: {
+                    "background-color": "#3e3c66",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return hasUpgrade("c", 81);
+                }
+            }
+        },
+        challengeTabs: {
+            "α": {
+                content: [
+                    ["row", [
+                        ["challenge", 11],
+                    ]],
+                    ["row", [
+                        ["challenge", 21],
+                        ["challenge", 22],
+                    ]],
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#301224",
+                    "margin": "20px",
+                },
+                buttonStyle: {
+                    "background-color": "#481b36",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return player.c.resetCount.gte(2);
+                }
+            },
+            "β": {
+                content: [
+                    ["row", [
+                        ["challenge", 111],
+                    ]],
+                    ["row", [
+                        ["challenge", 121],
+                        ["challenge", 122],
+                    ]],
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#301224",
+                    "margin": "20px",
+                },
+                buttonStyle: {
+                    "background-color": "#602448",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return hasUpgrade("c", 81);
+                }
+            }
         }
     },
     tabFormat: [
@@ -1791,4 +2321,107 @@ addLayer("c", {
         ["microtabs", "actualContent"]
     ],
     layerShown(){return (player.i.points.gte(124) || hasAchievement("ach", "25"))}
+})
+
+addLayer("e", {
+    name: "Enhancements",
+    symbol: "E",
+    position: 2,
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+        autoEnhance: false,
+    }},
+    color: "#7de8f6",
+    resource: "enhancement points",
+    row: 2,
+    branches: ["i", "c"],
+    type: "none",
+    //Enhancement Points are gained over time based on Improvement Points. These affect that rate.
+    gainMult(){
+        var result = new Decimal(0.1);
+        if(hasUpgrade("c", 112)){
+           result = result.times(upgradeEffect("c", 112));
+        };
+        return result;
+    },
+    gainExp(){
+        var result = new Decimal(0.3);
+        
+        return result;
+    },
+    gainRate(){
+        return player.i.unspent.pow(layers[this.layer].gainExp()).times(layers[this.layer].gainMult());
+    },
+    update(diff){
+        if(layers[this.layer].layerShown()){
+            player.e.points = player.e.points.plus(layers[this.layer].gainRate().times(diff));
+        };
+    },
+    
+    upgrades: {
+        rows: 99,
+        cols: 4,
+        11: {
+            title: "enh1x1",
+            description: "Multiply all Collapse buyables by the cube root of your current EP plus one.",
+            effect(){
+                return player.e.points.pow(1.0/3).plus(1);
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            cost: new Decimal(7.5),
+        },
+        21: {
+            title: "enh2x1",
+            description: "The upgrades {clp3x2} and {clp5x2} work even if you are not in a challenge.",
+            cost: new Decimal(15.5),
+            unlocked(){return hasUpgrade("e", 11)},
+        },
+        22: {
+            title: "enh2x2",
+            description: "Multiply all Geometry buyables by your current EP plus one.",
+            effect(){
+                return player.e.points.plus(1);
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            cost: new Decimal(31.5),
+            unlocked(){return hasUpgrade("e", 11)},
+        },
+        31: {
+            title: "enh3x1",
+            description: "This upgrade does nothing yet",
+            cost: new Decimal(1023.5),
+            unlocked(){return hasChallenge("c", 111)},
+        },
+    },
+    
+    componentStyles: {
+        "upgrade"() { return {
+            width:"160px",
+            height:"160px",
+        }},
+    },
+    tabFormat: [
+        ["raw-html",
+            function(){
+                return "You have <h2 style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 10px;'>" + formatWhole(player.e.points) + "</h2> enhancement points"
+            }],
+        "blank",
+        ["raw-html",
+            function(){
+                return "You are gaining <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainRate()) + "</b> EP per second based on unspent IP."
+            }],
+        "blank",
+        ["raw-html",
+            function(){
+                return "{ (unspent^<b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainExp()) + "</b>) * <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainMult()) + "</b> }"
+            }],
+        "blank", "blank",
+        "upgrades",
+    ],
+    layerShown(){return hasUpgrade("c", 111)}
 })
