@@ -12,11 +12,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.1",
-	name: "stretch_infinity.js",
+	num: "0.2.2",
+	name: "Running Out of Name Ideas",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.2.2 - Running Out of Name Ideas</h3><br>
+        - Added content until post-CC5.<br>
+        - Endgame: 67,108,864 total CE.<br>
+        - Speedrun time: 1h 40m - <b>untested, likely very lenient</b><br>
+        <br>
     <h3>v0.2.1 - stretch_infinity.js</h3><br>
         - Added Upgrades and Challenges β.<br>
         - Added Enhancements.<br>
@@ -64,7 +69,7 @@ let winText = `Congratulations! You have reached the current end of content.`
 // maxAll: autocalling would auto-max Geometry buyables, which, uh,
 // calc(Mult/EffBought/Cost/Display): autocalling these breaks the game (lots of undefined errors)
 // buyAThing: see above.
-var doNotCallTheseFunctionsEveryTick = ["maxAll","calcMult","calcEffBought","calcCost","calcDisplay","buyAThing","displayLast8"]
+var doNotCallTheseFunctionsEveryTick = ["maxAll","calcMult","calcEffBought","calcCost","calcDisplay","buyAThing","displayLast8", "cc5Check"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
@@ -72,9 +77,6 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-    if(!player.infinityBroken && player.points.gte(new Decimal(2).pow(infinityAt()))){
-        return false;
-    }
 	return true
 }
 
@@ -87,9 +89,12 @@ function capPoints(){
 
 // Calculate points/sec!
 function getPointGen() {
-	if(!canGenPoints())
+	if(!canGenPoints()){
 		return new Decimal(0)
-
+    };
+    if(!player.infinityBroken && player.points.gte(new Decimal(2).pow(infinityAt()))){
+        return new Decimal(0)
+    };
 	let gain = getBuyableAmount("g", 11);
     gain = gain.times(layers.g.buyables[11].mult());
 	return gain
@@ -105,19 +110,28 @@ var displayThings = [
     "<br>",
     function() {
         return "Time played: " + formatTime(player.timePlayed);
-    }
+    },
+    "<br>",
+    "<button onClick='save()'>Save</button>",
 ]
 
-let speedrunTime = 5400
+let speedrunTime = 6000
 // Determines when the game "ends"
 function isEndgame() {
-	return player.c.total.gte(1337000);
+	return player.c.total.gte(67108864);
 }
 
 function infinityAt(){
     var result = 1024;
     if(hasUpgrade("c", 81)){
-        result *= 2;
+        result += 1024;
+    }
+    if(hasUpgrade("c", 131)){
+        result += 1024;
+    }
+    //prevent challenge shenanigans
+    if(inChallenge("c", 21) || inChallenge("c", 22) || inChallenge("c", 111)){
+        result = 1024;
     }
     return result;
 }

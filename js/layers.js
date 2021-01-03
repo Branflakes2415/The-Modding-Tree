@@ -499,6 +499,31 @@ addLayer("ach", {
                 return "../images/locked/ach_c.png";
             },
         },
+        43: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Intelligent Purchasing Decisions";
+                }
+                return "??????????? ?????????? ?????????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(25)){
+                    return "Requirement shown at 25 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed Collapse Challenge 5. (2AP)";
+                }
+                return "Complete Collapse Challenge 5. (2AP)";
+            },
+            done(){return hasChallenge("c", 112)},
+            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
     },
     componentStyles: {
         "achievement"() { return {
@@ -617,7 +642,7 @@ addLayer("scr", {
                 }
                 return "Hint: Multiplication by zero. (1SP)";
             },
-            done(){return getBuyableAmount("g", 11).gte(1) && getPointGen().eq(0) && canGenPoints()},
+            done(){return getBuyableAmount("g", 11).gte(1) && getPointGen().eq(0) && canGenPoints() && !(!player.infinityBroken && player.points.gte(new Decimal(2).pow(infinityAt())))},
             onComplete(){player.scr.points = player.scr.points.plus(1)},
             image(){
                 if(hasAchievement("scr", this.id)){
@@ -786,6 +811,9 @@ addLayer("g", {
         if(id == 11 && hasChallenge("c", 111)){
             result = result.pow(1.05);
         }
+        if(hasUpgrade("i", 71)){
+            result = result.pow(1.01);
+        }
         return result;
     },
     //Returns the effective bought amount for a given buyable.
@@ -824,6 +852,15 @@ addLayer("g", {
         }
         if(hasUpgrade("i", 42)){
             result = result.plus(42);
+        }
+        if(id == 31 && hasUpgrade("e", 31)){
+            result = result.plus(upgradeEffect("e", 31));
+        }
+        if(id == 21 && hasUpgrade("e", 32)){
+            result = result.plus(upgradeEffect("e", 32));
+        }
+        if(id == 11 && hasUpgrade("e", 33)){
+            result = result.plus(upgradeEffect("e", 33));
         }
         return result;
     },
@@ -1047,12 +1084,15 @@ addLayer("i", {
         },
     },
     automate(){
-        if(player[this.layer].autoImprove){
+        if(player[this.layer].autoImprove && !inChallenge("c", 112)){
             autobuyUpgrades(this.layer);
         };
         if(player[this.layer].autoReset && canReset(this.layer)){
             doReset(this.layer);
         };
+    },
+    cc5Check(id){
+        return !inChallenge("c", 112) || (hasUpgrade("i", id) || player.i.upgrades.length < 5);
     },
     upgrades: {
         rows: 99,
@@ -1122,7 +1162,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(1),
-            unlocked(){return (hasUpgrade(this.layer, 11) && hasUpgrade(this.layer, 12)) || hasUpgrade("c", 61)}
+            unlocked(){return ((hasUpgrade(this.layer, 11) && hasUpgrade(this.layer, 12)) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         21: {
             title: "imp2x1",
@@ -1131,7 +1171,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(2),
-            unlocked(){return hasUpgrade(this.layer, 13) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 13) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         22: {
             title: "imp2x2",
@@ -1140,7 +1180,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(3),
-            unlocked(){return hasUpgrade(this.layer, 21) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 21) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         23: {
             title: "imp2x3",
@@ -1149,7 +1189,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(3),
-            unlocked(){return hasUpgrade(this.layer, 22) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 22) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         24: {
             title: "imp2x4",
@@ -1158,7 +1198,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(4),
-            unlocked(){return hasUpgrade(this.layer, 23) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 23) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         31: {
             title: "imp3x1",
@@ -1181,7 +1221,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(9),
-            unlocked(){return hasUpgrade(this.layer, 24) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 24) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         32: {
             title: "imp3x2",
@@ -1190,7 +1230,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return (hasAchievement("ach", 22) && hasUpgrade(this.layer, 31)) || hasUpgrade("c", 61)}
+            unlocked(){return ((hasAchievement("ach", 22) && hasUpgrade(this.layer, 31)) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         33: {
             title: "imp3x3",
@@ -1212,7 +1252,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 32) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 32) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         41: {
             title: "imp4x1",
@@ -1234,7 +1274,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 33) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 33) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         42: {
             title: "imp4x2",
@@ -1243,7 +1283,7 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(16),
-            unlocked(){return hasUpgrade(this.layer, 41) || hasUpgrade("c", 61)}
+            unlocked(){return (hasUpgrade(this.layer, 41) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         51: {
             title: "imp5x1",
@@ -1252,7 +1292,40 @@ addLayer("i", {
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
             cost: new Decimal(36),
-            unlocked(){return hasUpgrade(this.layer, 42)}
+            unlocked(){return hasUpgrade(this.layer, 42) && layers.i.cc5Check(this.id)}
+        },
+        61: {
+            title: "imp6x1",
+            description: "Raises {enh2x2}'s effect to the fourth power.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "unspent IP",
+            currencyInternalName: "unspent",
+            cost: new Decimal(192),
+            unlocked(){return hasChallenge("c", 112) && layers.i.cc5Check(this.id)}
+        },
+        71: {
+            title: "imp7x1",
+            description: "Raises all Geometry multipliers to the power of 1.01.",
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "unspent IP",
+            currencyInternalName: "unspent",
+            cost: new Decimal(64),
+            unlocked(){return hasUpgrade("i", 61) && layers.i.cc5Check(this.id)}
+        },
+        72: {
+            title: "imp7x2",
+            description: "Gain more Collapse resets based on unspent IP.",
+            effect(){
+                return player.i.unspent.pow(0.4).div(2);
+            },
+            effectDisplay(){
+                return "+" + format(this.effect()) + "<br>{(x^0.4)/2}"
+            },
+            currencyLocation(){return player[this.layer]},
+            currencyDisplayName: "unspent IP",
+            currencyInternalName: "unspent",
+            cost: new Decimal(128),
+            unlocked(){return hasUpgrade("i", 61) && layers.i.cc5Check(this.id)}
         },
         901: {
             title: "imp90x1",
@@ -1290,6 +1363,14 @@ addLayer("i", {
         ["raw-html",
             function(){
                 return "You have <h2 style='color:#add8e6; text-shadow:#add8e6 0px 0px 10px;'>" + formatWhole(player.i.unspent) + "</h2> unspent IP"
+            }],
+        "blank",
+        ["raw-html",
+            function(){
+                if(inChallenge("c", 112)){
+                    return "Picky: You can buy <h2 style='color:#add8e6; text-shadow:#add8e6 0px 0px 10px;'>" + (5 - player.i.upgrades.length) + "</h2> more Improvements";
+                }
+                return ""
             }],
         "blank",
         "upgrades"
@@ -1377,8 +1458,10 @@ addLayer("c", {
         if(layers[resettingLayer].row > this.row){
             layerDataReset(this.layer);
         };
-        for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
-            setBuyableAmount("c", (i * 10 + 1), player[this.layer].bought[i]);
+        if(!hasChallenge("c", 112)){
+            for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+                setBuyableAmount("c", (i * 10 + 1), player[this.layer].bought[i]);
+            };
         };
         if(!hasUpgrade("c", 72)){
             player.c.segments = new Decimal(0);
@@ -1577,6 +1660,14 @@ addLayer("c", {
         player.c.points = player.c.points.sub(cost);
         player[this.layer].bought[Math.floor(id / 10)] = player[this.layer].bought[Math.floor(id / 10)].plus(1);
         setBuyableAmount(this.layer, id, getBuyableAmount(this.layer, id).add(1))
+    },
+    //Total TRUE bought count
+    totalBought(){
+        var result = new Decimal(0);
+        for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
+            result = result.plus(player[this.layer].bought[i]);
+        };
+        return result;
     },
     buyables: {
         rows: 3,
@@ -1828,7 +1919,7 @@ addLayer("c", {
         },
         81: {
             title: "clp8x1",
-            description: "Square the limit on Points, significantly improve the CE formula, and unlock a new set of upgrades and challenges.",
+            description: "Multiply the limit on Points by 2^1,024, significantly improve the CE formula, and unlock a new set of upgrades and challenges.",
             cost: new Decimal(330),
             unlocked(){return hasUpgrade("c", 72)},
         },
@@ -1865,6 +1956,24 @@ addLayer("c", {
             currencyDisplayName: "Collapsed Segments",
             currencyInternalName: "segments",
             unlocked(){return hasUpgrade("e", 21)},
+        },
+        131: {
+            title: "clp13x1",
+            description: "Multiply the limit on Points by 2^1,024.",
+            cost: new Decimal(1048576),
+            unlocked(){return hasUpgrade("c", 121)},
+        },
+        132: {
+            title: "clp13x2",
+            description: "Increase the EP gain exponent by 0.2.",
+            cost: new Decimal(1048576),
+            unlocked(){return hasUpgrade("c", 121)},
+        },
+        141: {
+            title: "clp14x1",
+            description: "EP gain is based on total IP (instead of unspent).",
+            cost: new Decimal(16777216),
+            unlocked(){return hasUpgrade("c", 131) && hasUpgrade("c", 132)},
         },
     },
     
@@ -1918,9 +2027,6 @@ addLayer("c", {
             name: "One-Dimensional",
             challengeDescription(){
                 var desc = "Line Segments' multiplier is squared. All other Geometry buyables are locked.";
-                if(player.c.resetTime > 30 && !this.canComplete()){
-                    desc = desc + "<br><b>Hint: Are you sure you have enough Collapsed Segments?</b>"
-                };
                 return desc;
             },
             goalDescription: "Collapse the universe.",
@@ -1930,6 +2036,21 @@ addLayer("c", {
             },
             rewardDescription: "Unlock Automatic Collapse, and Line Segments' multiplier is raised to the power of 1.05.",
             unlocked(){ return hasUpgrade("c", 81)},
+            countsAs: [9001],
+        },
+        112: {
+            name: "Picky",
+            challengeDescription(){
+                var desc = "You can only have 5 Improvements.<br>(Auto-Improve is disabled.)";
+                return desc;
+            },
+            goalDescription: "Collapse the universe for at least 777 CE.",
+            canComplete(){return getResetGain("c").gte(777)},
+            onComplete(){
+                doReset(this.layer);
+            },
+            rewardDescription: "Unlock 3 new Improvements, and Collapse buyables do not reset on Collapse.",
+            unlocked(){ return hasChallenge("c", 111)},
             countsAs: [9001],
         }
     },
@@ -2294,10 +2415,10 @@ addLayer("c", {
                 content: [
                     ["row", [
                         ["challenge", 111],
+                        ["challenge", 112],
                     ]],
                     ["row", [
                         ["challenge", 121],
-                        ["challenge", 122],
                     ]],
                     "blank",
                 ],
@@ -2347,11 +2468,18 @@ addLayer("e", {
     },
     gainExp(){
         var result = new Decimal(0.3);
+        if(hasUpgrade("c", 132)){
+            result = result.plus(0.2);
+        }
         
         return result;
     },
     gainRate(){
-        return player.i.unspent.pow(layers[this.layer].gainExp()).times(layers[this.layer].gainMult());
+        var result = player.i.unspent;
+        if(hasUpgrade("c",141)){
+            result = player.i.points;
+        }
+        return result.pow(layers[this.layer].gainExp()).times(layers[this.layer].gainMult());
     },
     update(diff){
         if(layers[this.layer].layerShown()){
@@ -2381,9 +2509,19 @@ addLayer("e", {
         },
         22: {
             title: "enh2x2",
-            description: "Multiply all Geometry buyables by your current EP plus one.",
+            description(){
+                var result = "Multiply all Geometry buyables by your current EP plus one.";
+                if(hasUpgrade("i", 61)){
+                    result = result + "<br>{i6x1}: Effect ^4";
+                };
+                return result;
+            },
             effect(){
-                return player.e.points.plus(1);
+                var result = player.e.points.plus(1);
+                if(hasUpgrade("i", 61)){
+                    result = result.pow(4);
+                };
+                return result;
             },
             effectDisplay(){
                 return "x" + format(this.effect());
@@ -2393,8 +2531,38 @@ addLayer("e", {
         },
         31: {
             title: "enh3x1",
-            description: "This upgrade does nothing yet",
+            description: "Gain 4 free bought Cubes for each owned Collapse Upgrade.",
+            effect(){
+                return player.c.upgrades.length * 4;
+            },
+            effectDisplay(){
+                return "+" + formatWhole(this.effect());
+            },
             cost: new Decimal(1023.5),
+            unlocked(){return hasChallenge("c", 111)},
+        },
+        32: {
+            title: "enh3x2",
+            description: "Gain 8 free bought Squares for each TRUE bought Collapse buyable.",
+            effect(){
+                return layers.c.totalBought().times(8);
+            },
+            effectDisplay(){
+                return "+" + formatWhole(this.effect());
+            },
+            cost: new Decimal(1023.5),
+            unlocked(){return hasChallenge("c", 111)},
+        },
+        33: {
+            title: "enh3x3",
+            description: "Gain 16 free bought Line Segments for each owned Enhancement.",
+            effect(){
+                return player.e.upgrades.length * 16;
+            },
+            effectDisplay(){
+                return "+" + formatWhole(this.effect());
+            },
+            cost: new Decimal(2047.5),
             unlocked(){return hasChallenge("c", 111)},
         },
     },
@@ -2413,12 +2581,16 @@ addLayer("e", {
         "blank",
         ["raw-html",
             function(){
-                return "You are gaining <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainRate()) + "</b> EP per second based on unspent IP."
+                return "You are gaining <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainRate()) + "</b> EP per second based on your IP."
             }],
         "blank",
         ["raw-html",
             function(){
-                return "{ (unspent^<b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainExp()) + "</b>) * <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainMult()) + "</b> }"
+                var result = "{ (unspent IP";
+                if(hasUpgrade("c", 141)){
+                    result = "{ (total IP"
+                }
+                return result + "^<b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainExp()) + "</b>) * <b style='color:#7de8f6; text-shadow:#7de8f6 0px 0px 8px;'>" + format(layers.e.gainMult()) + "</b> }"
             }],
         "blank", "blank",
         "upgrades",
