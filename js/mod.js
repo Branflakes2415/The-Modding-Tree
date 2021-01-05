@@ -12,11 +12,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.2",
-	name: "Running Out of Name Ideas",
+	num: "0.2.3",
+	name: "Almost Double Feature",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.2.3 - Almost Double Feature</h3><br>
+        - Added content until CC7.<br>
+        - Fixed logarithm format. (Decimal.floor() doesn't actually take an argument. Oops.)<br>
+        - Endgame: 2^184 (~2.45e55) Collapsed Segments. <br>
+        - Speedrun: 2h 0m - <b>still not testing these</b> <br>
+        <br>
     <h3>v0.2.2 - Running Out of Name Ideas</h3><br>
         - Added content until post-CC5.<br>
         - Endgame: 67,108,864 total CE.<br>
@@ -115,10 +121,10 @@ var displayThings = [
     "<button onClick='save()'>Save</button>",
 ]
 
-let speedrunTime = 6000
+let speedrunTime = 7200
 // Determines when the game "ends"
 function isEndgame() {
-	return player.c.total.gte(67108864);
+	return player.c.segments.gte(Math.pow(2, 184));
 }
 
 function infinityAt(){
@@ -127,6 +133,9 @@ function infinityAt(){
         result += 1024;
     }
     if(hasUpgrade("c", 131)){
+        result += 1024;
+    }
+    if(hasUpgrade("c", 161)){
         result += 1024;
     }
     //prevent challenge shenanigans

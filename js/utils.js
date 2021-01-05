@@ -16,7 +16,7 @@ function exponentialFormat(num, precision, mantissa = true) {
 }
 
 function logarithmFormat(num, precision){
-    var e = num.log10().floor(precision);
+    var e = num.log10().times(Math.pow(10, precision)).floor().div(Math.pow(10, precision));
     return "e" + commaFormat(e, precision)
 }
 
