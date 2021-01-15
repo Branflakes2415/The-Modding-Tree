@@ -12,11 +12,26 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.3",
-	name: "Almost Double Feature",
+	num: "0.2.4",
+	name: "γ'd This Take So Long?",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.2.4 - "γ'd This Take So Long?"</h3><br>
+<small><strike>because γ looks like a Y geddit i'm real good at update names guys</strike></small><br>
+        - I'm lazy, that's why.<br>
+        - Added content until CC10.<br>
+        - Added another mode for Auto-Collapse, since my code for time-past-peak is very jank.<br>
+<small> - I should really also make the time an input box but again, I'm lazy</small><br>
+        - Fixed {clp5x2} not correctly reducing the cost of IP.<br>
+<small> - now I have to do a balancing pass through the entire front half of collapse OH BOY </small><br>
+        - Removed "Probably enough IP", replaced with placeholder progression achievement.<br>
+        - Removed hacky fix to prevent gaining multiple CE before stretching infinity.<br>
+<small> - capPoints() effectively fixes that by itself.</small><br>
+        - Endgame: 2^99 CE.<br>
+        - Speedrun: 2h 30m - <b>see below</b> <br>
+        - can't wait for the game to inflate after penteracts get added yay<br>
+        <br>
     <h3>v0.2.3 - Almost Double Feature</h3><br>
         - Added content until CC7.<br>
         - Fixed logarithm format. (Decimal.floor() doesn't actually take an argument. Oops.)<br>
@@ -72,7 +87,7 @@ let winText = `Congratulations! You have reached the current end of content.`
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
 
-// maxAll: autocalling would auto-max Geometry buyables, which, uh,
+// maxAll: autocalling would auto-max buyables even if that function hadn't been unlocked yet, which, uh,
 // calc(Mult/EffBought/Cost/Display): autocalling these breaks the game (lots of undefined errors)
 // buyAThing: see above.
 var doNotCallTheseFunctionsEveryTick = ["maxAll","calcMult","calcEffBought","calcCost","calcDisplay","buyAThing","displayLast8", "cc5Check"]
@@ -86,10 +101,10 @@ function canGenPoints(){
 	return true
 }
 
-// Caps points at the current value of infinity. Called within the doThisEveryTick function in the achievements layer.
+// Caps points at the current value of infinity. Called within the doThisEveryTick function in layers.js.
 function capPoints(){
-    if(!player.infinityBroken && player.points.gte(new Decimal(2).pow(infinityAt()))){
-        player.points = new Decimal(2).pow(infinityAt());
+    if(!player.infinityBroken && player.points.gte(twoPow(infinityAt()))){
+        player.points = twoPow(infinityAt());
     }
 }
 
@@ -98,7 +113,7 @@ function getPointGen() {
 	if(!canGenPoints()){
 		return new Decimal(0)
     };
-    if(!player.infinityBroken && player.points.gte(new Decimal(2).pow(infinityAt()))){
+    if(!player.infinityBroken && player.points.gte(twoPow(infinityAt()))){
         return new Decimal(0)
     };
 	let gain = getBuyableAmount("g", 11);
@@ -118,13 +133,13 @@ var displayThings = [
         return "Time played: " + formatTime(player.timePlayed);
     },
     "<br>",
-    "<button onClick='save()'>Save</button>",
+    "<button onClick='save()'>Save</button>&nbsp;<button onClick='importSave()'>Load</button>",
 ]
 
-let speedrunTime = 7200
+let speedrunTime = 9000
 // Determines when the game "ends"
 function isEndgame() {
-	return player.c.segments.gte(Math.pow(2, 184));
+	return player.c.points.gte(twoPow(99));
 }
 
 function infinityAt(){
@@ -137,6 +152,12 @@ function infinityAt(){
     }
     if(hasUpgrade("c", 161)){
         result += 1024;
+    }
+    if(hasChallenge("c", 122)){
+        result += 2048;
+    }
+    if(hasUpgrade("c", 231)){
+        result += 2048;
     }
     //prevent challenge shenanigans
     if(inChallenge("c", 21) || inChallenge("c", 22) || inChallenge("c", 111)){
