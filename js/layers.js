@@ -18,6 +18,7 @@ addLayer("ach", {
         unlocked: true,
         points: new Decimal(0),
         triggerAchievement22Dammit: false,
+        achTimes: {},
     }},
     color: "#d0d040",
     resource: "achievement power",
@@ -25,6 +26,14 @@ addLayer("ach", {
         return "Achievements (" + formatWhole(player.ach.points) + "AP)";
     },
     row: "side",
+    completeAch(id, pts){
+        player.ach.points = player.ach.points.plus(pts);
+        player.ach.achTimes[id] = player.timePlayed;
+        console.log("ach" + id + ": " + formatTime(player.timePlayed));
+    },
+    dispTime(id){
+        return " \n ---------------- \n Playtime when earned: \n " + formatTime(player.ach.achTimes[id]);
+    },
     achievements: {
         rows: 69,
         cols: 6,
@@ -38,12 +47,12 @@ addLayer("ach", {
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Bought a single Line Segment. Congratulations, I guess??? (1AP)";
+                    return "Bought a single Line Segment. Congratulations, I guess??? (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Buy a single Line Segment. (1AP)";
             },
             done(){return getBuyableAmount("g", 11).gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach11.png";
@@ -60,12 +69,12 @@ addLayer("ach", {
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Bought a single Square, demonstrating the patience required to wait 10.7 seconds. (1AP)";
+                    return "Bought a single Square, demonstrating the patience required to wait 10.7 seconds. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Buy a single Square. (1AP)";
             },
             done(){return getBuyableAmount("g", 21).gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach12.png";
@@ -85,12 +94,12 @@ addLayer("ach", {
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Bought a single Cube. Row 2 approaches! (1AP)";
+                    return "Bought a single Cube. Row 2 approaches! (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Buy a single Cube. (1AP)";
             },
             done(){return getBuyableAmount("g", 31).gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach13.png";
@@ -108,12 +117,12 @@ addLayer("ach", {
             },
             tooltip(){
                 if(hasAchievement("ach", this.id)){
-                    return "Reached 1,048,576 Points. Yay. (1AP)";
+                    return "Reached 1,048,576 Points. Yay. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get 1,048,576 Points. (1AP)";
             },
             done(){return player.points.gte(1048576)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach14.png";
@@ -133,15 +142,12 @@ addLayer("ach", {
                     return "Requirement shown at 3 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got an Improvement Point. (1AP)";
+                    return "Got an Improvement Point. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Perform a row 2 reset. (1AP)";
             },
             done(){return player.i.points.gte(1)},
-            onComplete(){
-                player.ach.points = player.ach.points.plus(1);
-                console.log("First IP: " + formatTime(player.timePlayed));
-            },
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach15.png";
@@ -161,15 +167,12 @@ addLayer("ach", {
                     return "Requirement shown at 5 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Reached 3 Improvement Points. (2AP)";
+                    return "Reached 3 Improvement Points. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get 3 Improvement Points. (2AP)";
             },
             done(){return player.i.points.gte(3)},
-            onComplete(){
-                player.ach.points = player.ach.points.plus(2)
-                console.log("Hat Trick: " + formatTime(player.timePlayed));
-            },
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach16.png";
@@ -189,15 +192,12 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got 128 total free bought Geometry buyables. (actually this just fires when you get {imp2x4} because i'm lazy) (1AP)";
+                    return "Got 128 total free bought Geometry buyables. (actually this just fires when you get {imp2x4} because i'm lazy) (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get 128 total free bought Geometry buyables. (1AP)";
             },
             done(){return hasUpgrade("i", 24)},
-            onComplete(){
-                player.ach.points = player.ach.points.plus(1);
-                console.log("Great Deal: " + formatTime(player.timePlayed));
-            },
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach21.png";
@@ -217,15 +217,12 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Unlocked Tesseracts. That upgrade used to be 30 IP, by the way. What was I thinking?(2AP)";
+                    return "Unlocked Tesseracts. That upgrade used to be 30 IP, by the way. What was I thinking? (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Buy the Improvement {imp90x1}. (2AP)";
             },
             done(){return player[this.layer].triggerAchievement22Dammit},
-            onComplete(){
-                player.ach.points = player.ach.points.plus(2);
-                console.log("Tesseract: " + formatTime(player.timePlayed));
-            },
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach22.png";
@@ -245,15 +242,12 @@ addLayer("ach", {
                     return "Requirement shown at 7 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got 13 Improvements. (2AP)";
+                    return "Got 13 Improvements. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get 13 Improvements. (2AP)";
             },
             done(){return hasUpgrade("i", 51)},
-            onComplete(){
-                player.ach.points = player.ach.points.plus(2);
-                console.log("13 Improvements: " + formatTime(player.timePlayed));
-            },
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach23.png";
@@ -273,12 +267,12 @@ addLayer("ach", {
                     return "Requirement shown at 10 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Made a Geometry buyable jump up in cost dramatically. (1AP)";
+                    return "Made a Geometry buyable jump up in cost dramatically. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get a Geometry buyable's cost over 1e308. (1AP)";
             },
             done(){return (layers.g.buyables[11].cost().gte("1e400") || layers.g.buyables[21].cost().gte("1e400") || layers.g.buyables[31].cost().gte("1e400") || layers.g.buyables[41].cost().gte("1e400"))},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach24.png";
@@ -298,12 +292,12 @@ addLayer("ach", {
                     return "Requirement shown at 10 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Collapsed the universe. (5AP)";
+                    return "Collapsed the universe. (5AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Perform a row 3 reset. (5AP)";
             },
             done(){return player.c.points.gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(5)},
+            onComplete(){layers[this.layer].completeAch(this.id, 5)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -323,12 +317,12 @@ addLayer("ach", {
                     return "Requirement shown at 18 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Collapsed the universe three times. (2AP)";
+                    return "Collapsed the universe three times. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Collapse the universe three times. (2AP)";
             },
             done(){return player.c.resetCount.gte(3)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -348,12 +342,12 @@ addLayer("ach", {
                     return "Requirement shown at 20 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed a Collapse Challenge. (2AP)";
+                    return "Completed a Collapse Challenge. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete a Collapse Challenge. (2AP)";
             },
             done(){return hasChallenge("c", 11)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -373,12 +367,12 @@ addLayer("ach", {
                     return "Requirement shown at 20 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Collapsed in under 7.77 seconds. (2AP)";
+                    return "Collapsed in under 7.77 seconds. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Collapse in under 7.77 seconds. (2AP)";
             },
             done(){return (player.c.bestTime < 7.77)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -398,12 +392,12 @@ addLayer("ach", {
                     return "Requirement shown at 20 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed the second Collapse Challenge. (1AP)";
+                    return "Completed the second Collapse Challenge. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete the second Collapse Challenge. (1AP)";
             },
             done(){return hasChallenge("c", 21)},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -414,21 +408,21 @@ addLayer("ach", {
         35: {
             name(){
                 if(hasAchievement("ach", this.id) || this.done()){
-                    return "A Minor Test of Patience";
+                    return "This challenge used to suck";
                 }
-                return "? ????? ???? ?? ????????";
+                return "???? ????????? ???? ?? ????";
             },
             tooltip(){
                 if(player.ach.points.lt(20)){
                     return "Requirement shown at 20 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed the third Collapse Challenge. (3AP)";
+                    return "Completed the third Collapse Challenge. (3AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete the third Collapse Challenge. (3AP)";
             },
             done(){return hasChallenge("c", 22)},
-            onComplete(){player.ach.points = player.ach.points.plus(3)},
+            onComplete(){layers[this.layer].completeAch(this.id, 3)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -448,12 +442,12 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Expanded the universe's limit to 2^2,048 Points. (3AP)";
+                    return "Expanded the universe's limit to 2^2,048 Points. (3AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Buy the Collapse upgrade {c8x1}. (3AP)";
             },
             done(){return hasUpgrade("c", 81)},
-            onComplete(){player.ach.points = player.ach.points.plus(3)},
+            onComplete(){layers[this.layer].completeAch(this.id, 3)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -473,12 +467,12 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got a Collapsed Pentachoron. \n ...yes, I Googled it. (2AP)";
+                    return "Got a Collapsed Pentachoron. \n ...yes, I Googled it. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get a third-tier Collapse buyable. (2AP)";
             },
             done(){return getBuyableAmount("c", 31).gte(1)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -498,12 +492,12 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed Collapse Challenge 4. (2AP)";
+                    return "Completed Collapse Challenge 4. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete Collapse Challenge 4. (2AP)";
             },
             done(){return hasChallenge("c", 111)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -523,12 +517,12 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed Collapse Challenge 5. (2AP)";
+                    return "Completed Collapse Challenge 5. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete Collapse Challenge 5. (2AP)";
             },
             done(){return hasChallenge("c", 112)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -548,12 +542,12 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed Collapse Challenge 6. (2AP)";
+                    return "Completed Collapse Challenge 6. (2AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete Collapse Challenge 6. (2AP)";
             },
             done(){return hasChallenge("c", 121)},
-            onComplete(){player.ach.points = player.ach.points.plus(2)},
+            onComplete(){layers[this.layer].completeAch(this.id, 2)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -573,15 +567,14 @@ addLayer("ach", {
                     return "Requirement shown at 25 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Got e1,000.02 Points. (1AP)";
+                    return "Got e1,000.02 Points. (1AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Get e1,000.02 Points. (1AP)";
             },
-            done(){return player.points.gte("e1000")},
-            onComplete(){player.ach.points = player.ach.points.plus(1)},
+            done(){return player.points.gte(twoPow(3322))},
+            onComplete(){layers[this.layer].completeAch(this.id, 1)},
             image(){
                 if(hasAchievement("ach", this.id)){
-                    //2^3322
                     return "../images/ach14.png";
                 };
                 return "../images/locked/ach_g.png";
@@ -599,12 +592,87 @@ addLayer("ach", {
                     return "Requirement shown at 33 Achievement Power.";
                 }
                 if(hasAchievement("ach", this.id)){
-                    return "Completed Collapse Challenge 7. (4AP)";
+                    return "Completed Collapse Challenge 7. (4AP)" + layers[this.layer].dispTime(this.id);
                 }
                 return "Complete Collapse Challenge 7. (4AP)";
             },
             done(){return hasChallenge("c", 122)},
-            onComplete(){player.ach.points = player.ach.points.plus(4)},
+            onComplete(){layers[this.layer].completeAch(this.id, 4)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        52: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Branflakes please add title";
+                }
+                return "?????????? ?????? ??? ?????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(33)){
+                    return "Requirement shown at 33 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed Collapse Challenge 8. (3AP)" + layers[this.layer].dispTime(this.id);
+                }
+                return "Complete Collapse Challenge 8. (3AP)";
+            },
+            done(){return hasChallenge("c", 211)},
+            onComplete(){layers[this.layer].completeAch(this.id, 3)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        53: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "Running Out of Challenge Ideas";
+                }
+                return "??????? ??? ?? ????????? ?????";
+            },
+            tooltip(){
+                if(player.ach.points.lt(33)){
+                    return "Requirement shown at 33 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Completed Collapse Challenge 9. (3AP)" + layers[this.layer].dispTime(this.id);
+                }
+                return "Complete Collapse Challenge 9. (3AP)";
+            },
+            done(){return hasChallenge("c", 212)},
+            onComplete(){layers[this.layer].completeAch(this.id, 3)},
+            image(){
+                if(hasAchievement("ach", this.id)){
+                    return "../images/ach25.png";
+                };
+                return "../images/locked/ach_c.png";
+            },
+        },
+        54: {
+            name(){
+                if(hasAchievement("ach", this.id) || this.done()){
+                    return "This achievement isn't obtainable yet";
+                }
+                return "???? ??????????? ????? ?????????? ???";
+            },
+            tooltip(){
+                if(player.ach.points.lt(50)){
+                    return "Requirement shown at 50 Achievement Power.";
+                }
+                if(hasAchievement("ach", this.id)){
+                    return "Unlocked Penteracts. The planned name for this achievement is a dumb joke that was old two achievements ago, but I’ll probably put it in anyway. (5AP)" + layers[this.layer].dispTime(this.id);
+                }
+                return "Unlock Penteracts. The planned name for this achievement is a dumb joke that was old two achievements ago, but I’ll probably put it in anyway. (5AP)";
+            },
+            done(){return hasChallenge("c", 221)},
+            onComplete(){layers[this.layer].completeAch(this.id, 5)},
             image(){
                 if(hasAchievement("ach", this.id)){
                     return "../images/ach25.png";
@@ -785,6 +853,7 @@ addLayer("g", {
     totalBuyables: 4,
     //[Max all]
     maxAll(){
+        //var timeTaken = Date.now();
         for(var i = 1; i <= layers[this.layer].totalBuyables; i++){
             if(layers[this.layer].buyables[i * 10 + 1].unlocked()){
                 while(layers[this.layer].buyables[i * 10 + 1].canAfford()){
@@ -792,6 +861,11 @@ addLayer("g", {
                 }
             }
         }
+        /*
+        if(Date.now() - timeTaken >= 5){
+            console.log("Max all took about " + (Date.now() - timeTaken) + "ms, because my optimization skills suck.")
+        }
+        */
     },
     clickables: {
         rows: 1,
@@ -1230,15 +1304,15 @@ addLayer("i", {
         cols: 5,
         11: {
             title: "imp1x1",
-            description: "Multiplies all Geometry multipliers by 8.",
+            description: "Multiplies all Geometry multipliers by 16.",
             effect(){
                 if(inChallenge("c", 22)){
-                    return new Decimal(8).pow(Math.pow(player.i.upgrades.length, 1.2));
+                    return new Decimal(16).pow(0.15 + 0.85 * Math.pow(player.i.upgrades.length, 1.2));
                 };
                 if(hasChallenge("c", 22)){
-                    return new Decimal(8).pow(challengeEffect("c", 22));
+                    return new Decimal(16).pow(challengeEffect("c", 22));
                 };
-                return new Decimal(8);
+                return new Decimal(16);
             },
             effectDisplay(){
                 var cc3note = "";
@@ -1367,7 +1441,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(16),
+            cost: new Decimal(15),
             unlocked(){return ((hasAchievement("ach", 22) && hasUpgrade(this.layer, 31)) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         33: {
@@ -1389,7 +1463,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(16),
+            cost: new Decimal(21),
             unlocked(){return (hasUpgrade(this.layer, 32) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         41: {
@@ -1411,7 +1485,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(16),
+            cost: new Decimal(12),
             unlocked(){return (hasUpgrade(this.layer, 33) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         42: {
@@ -1420,7 +1494,7 @@ addLayer("i", {
             currencyLocation(){return player[this.layer]},
             currencyDisplayName: "unspent IP",
             currencyInternalName: "unspent",
-            cost: new Decimal(16),
+            cost: new Decimal(17),
             unlocked(){return (hasUpgrade(this.layer, 41) || hasUpgrade("c", 61)) && layers.i.cc5Check(this.id)}
         },
         51: {
@@ -1468,10 +1542,14 @@ addLayer("i", {
         901: {
             title: "imp90x1",
             description: "Resets Geometry AND this layer, but PERMANENTLY unlocks Tesseracts and new Improvements.",
-            cost: new Decimal(29),
+            cost: new Decimal(twoPow(256)),
+            currencyLocation(){return player},
+            currencyDisplayName: "points",
+            currencyInternalName: "points",
             unlocked(){return hasUpgrade(this.layer, 31) && !hasAchievement("ach", 22)},
             onPurchase(){
                 player.ach.triggerAchievement22Dammit = true;
+                doReset(this.layer, true);
                 layerDataReset(this.layer);
             }
         }
@@ -1575,6 +1653,7 @@ addLayer("c", {
     gainExp(){
             return new Decimal(1);
     },
+    
     resetDescription: "Collapse the universe to generate ",
     onPrestige(gain){
         player[this.layer].bestTime = Math.min(player[this.layer].bestTime, player[this.layer].resetTime);
@@ -2025,7 +2104,7 @@ addLayer("c", {
             effectDisplay(){
                 return "x" + format(this.effect());
             },
-            cost: new Decimal(32),
+            cost: new Decimal(16),
             unlocked(){return hasChallenge("c", 21)},
         },
         42: {
@@ -2101,7 +2180,7 @@ addLayer("c", {
         71: {
             title: "clp7x1",
             description: "Gain 16 free bought Collapsed Triangles.",
-            cost: new Decimal(160),
+            cost: new Decimal(128),
             unlocked(){return hasUpgrade("c", 63)},
         },
         72: {
@@ -2122,7 +2201,7 @@ addLayer("c", {
         81: {
             title: "clp8x1",
             description: "Multiply the limit on Points by 2^1,024, and unlock a new set of upgrades and challenges.",
-            cost: new Decimal(330),
+            cost: new Decimal(174),
             unlocked(){return hasUpgrade("c", 72)},
         },
         //Upgrades β
@@ -2207,8 +2286,8 @@ addLayer("c", {
         },
         171: {
             title: "clp17x1",
-            description: "Increase the EP gain exponent and base multiplier by 0.3.",
-            cost: twoPow(35),
+            description: "Increase the EP gain exponent and base multiplier by 0.35.",
+            cost: twoPow(34),
             unlocked(){return hasUpgrade("c", 161)},
         },
         172: {
@@ -2244,7 +2323,7 @@ addLayer("c", {
             effectDisplay(){
                 return "+" + format(this.effect());
             },
-            cost: twoPow(41),
+            cost: twoPow(40),
             unlocked(){return hasUpgrade("c", 161)},
         },
         //Upgrades γ
@@ -2263,13 +2342,13 @@ addLayer("c", {
         212: {
             title: "clp21x2",
             description: "Increase the CS effect exponent by 0.5.",
-            cost: twoPow(53),
+            cost: twoPow(52),
             unlocked(){return hasChallenge("c", 122)},
         },
         213: {
             title: "clp21x3",
             description: "The reward for {Pay to Win} counts Enhancements.",
-            cost: twoPow(56),
+            cost: twoPow(57),
             unlocked(){return hasChallenge("c", 122)},
         },
         221: {
@@ -2293,7 +2372,7 @@ addLayer("c", {
             effectDisplay(){
                 return "+" + format(this.effect());
             },
-            cost: twoPow(67),
+            cost: twoPow(66),
             unlocked(){return hasChallenge("c", 211)},
         },
         223: {
@@ -2358,7 +2437,7 @@ addLayer("c", {
             onComplete(){
                 doReset(this.layer);
             },
-            rewardDescription: "AUTOMATIC. MAX. ALL. <br>Also start with 2 IP and the first two Improvements.",
+            rewardDescription: "Unlock Automatic Max All. <br>Also start with 2 IP and the first two Improvements.",
             countsAs: [9001], //For effects that work in any challenge
         },
         21: {
@@ -2381,19 +2460,19 @@ addLayer("c", {
         },
         22: {
             name: "Pay to Win",
-            challengeDescription: "Free bought Geometry buyables do nothing, BUT the effect of {imp1x1} is raised to the power of (owned improvements)^1.2.",
+            challengeDescription: "Free bought Geometry buyables do nothing, BUT {imp1x1}'s effect is raised ^(0.15 + 0.85 * improvements^1.2).",
             goalDescription: "Collapse the universe.",
             canComplete(){return canReset("c")},
             onComplete(){
                 doReset(this.layer);
             },
-            rewardDescription: "Unlock Automatic Improvements, and the effect of {imp1x1} is raised to the power of (owned improvements)^0.4.",
+            rewardDescription: "Unlock Automatic Improvements, and {imp1x1}'s effect is raised<br> ^(0.25 + 0.75 * improvements^0.4).",
             rewardEffect(){
                 var result = player.i.upgrades.length;
                 if(hasUpgrade("c", 213)){
                     result += player.e.upgrades.length;
                 }
-                result = Math.pow(result, 0.4);
+                result = 0.25 + 0.75 * Math.pow(result, 0.4);
                 if(hasChallenge("c", 122)){
                     result = Math.pow(result, 1.5);
                 };
@@ -2963,7 +3042,7 @@ addLayer("c", {
                     "border-color": "#c3ade3",
                 },
                 unlocked() {
-                    return hasUpgrade("c", 81);
+                    return hasChallenge("c", 122);
                 }
             },
         }
@@ -2996,7 +3075,7 @@ addLayer("e", {
         var result = new Decimal(0.1);
         //Base increases
         if(hasUpgrade("c", 171)){
-            result = result.plus(0.3);
+            result = result.plus(0.35);
         }
         //Multipliers
         if(hasUpgrade("c", 112)){
@@ -3013,7 +3092,7 @@ addLayer("e", {
             result = result.plus(0.2);
         }
         if(hasUpgrade("c", 171)){
-            result = result.plus(0.3);
+            result = result.plus(0.35);
         }
         if(hasUpgrade("c", 172)){
             result = result.plus(upgradeEffect("c", 172));
@@ -3057,12 +3136,12 @@ addLayer("e", {
             effectDisplay(){
                 return "x" + format(this.effect());
             },
-            cost: new Decimal(7.5),
+            cost: new Decimal(8),
         },
         21: {
             title: "enh2x1",
             description: "The upgrades {clp3x2} and {clp5x2} work even if you are not in a challenge.",
-            cost: new Decimal(15.5),
+            cost: new Decimal(16),
             unlocked(){return hasUpgrade("e", 11)},
         },
         22: {
@@ -3090,7 +3169,7 @@ addLayer("e", {
             effectDisplay(){
                 return "x" + format(this.effect());
             },
-            cost: new Decimal(31.5),
+            cost: new Decimal(32),
             unlocked(){return hasUpgrade("e", 11)},
         },
         31: {
@@ -3102,7 +3181,7 @@ addLayer("e", {
             effectDisplay(){
                 return "+" + formatWhole(this.effect());
             },
-            cost: new Decimal(1023.5),
+            cost: twoPow(10),
             unlocked(){return hasChallenge("c", 111)},
         },
         32: {
@@ -3114,7 +3193,7 @@ addLayer("e", {
             effectDisplay(){
                 return "+" + formatWhole(this.effect());
             },
-            cost: new Decimal(1023.5),
+            cost: twoPow(10),
             unlocked(){return hasChallenge("c", 111)},
         },
         33: {
@@ -3126,31 +3205,31 @@ addLayer("e", {
             effectDisplay(){
                 return "+" + formatWhole(this.effect());
             },
-            cost: new Decimal(2047.5),
+            cost: twoPow(10),
             unlocked(){return hasChallenge("c", 111)},
         },
         41: {
             title: "enh4x1",
             description: "Increase the multiplier for each bought Tesseract by 0.10.",
-            cost: new Decimal(2047.5),
+            cost: twoPow(11),
             unlocked(){return hasUpgrade("e", 33)},
         },
         42: {
             title: "enh4x2",
             description: "Increase the multiplier for each bought Cube by 0.12.",
-            cost: new Decimal(8191.5),
+            cost: twoPow(13),
             unlocked(){return hasUpgrade("e", 33)},
         },
         43: {
             title: "enh4x3",
             description: "Increase the multiplier for each bought Square by 0.14.",
-            cost: new Decimal(32767.5),
+            cost: twoPow(15),
             unlocked(){return hasUpgrade("e", 33)},
         },
         44: {
             title: "enh4x4",
             description: "Increase the multiplier for each bought Line Segment by 0.16.",
-            cost: new Decimal(131071.5),
+            cost: twoPow(17),
             unlocked(){return hasUpgrade("e", 33)},
         },
         51: {

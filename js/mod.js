@@ -12,11 +12,35 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.4",
-	name: "γ'd This Take So Long?",
+	num: "0.2.5",
+	name: "Balancing Act",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.2.5 - "Balancing Act"</h3><br>
+        - Rebalancing in the aftermath of the {clp5x2} fix, and also rebalancing in general.<br>
+<small> - {imp1x1}: Effect x8 -> x16<br>
+        - {imp90x1}: Cost 29 IP -> 1.16e77 points<br>
+        - {imp3x2}: Cost 16 -> 15 unspent IP<br>
+        - {imp3x3}: Cost 16 -> 21 unspent IP<br>
+        - {imp4x1}: Cost 16 -> 12 unspent IP<br>
+        - {imp4x2}: Cost 16 -> 17 unspent IP<br>
+        - {clp4x1}: Cost 32 -> 16 CE<br>
+        - {Pay to Win}: reward x0.75 to compensate for {imp1x1} buff, in-challenge effect only dropped by 15% because this challenge sucked. also shortened description/reward text to fit the bigger formula <br>
+        - {clp7x1}: Cost 160 -> 128 CE<br>
+        - {clp8x1}: Cost 330 -> 174 CE<br>
+        - {enh3x3}: Cost 2,048 -> 1,024 EP<br>
+        - {clp17x1}: Cost 2^35 -> 2^34 CE, Effect +0.30 -> +0.35<br>
+        - {clp17x3}: Cost 2^41 -> 2^40 CE<br>
+        - {clp21x2}: Cost 2^53 -> 2^52 CE<br>
+        - {clp21x3}: Cost 2^56 -> 2^57 CE<br>
+        - {clp22x2}: Cost 2^67 -> 2^66 CE<br>
+</small>- Achievements now display the playtime you had when you earned them.<br>
+<small> - This replaces the old console speedrun splits, but the console now logs every achievement you earn.</small><br>
+        - Fixed Challenges γ becoming visible alongside Challenges β.<br>
+        - Endgame: unchanged.<br>
+        - Speedrun: 1h 50m<br>
+        <br>
     <h3>v0.2.4 - "γ'd This Take So Long?"</h3><br>
 <small><strike>because γ looks like a Y geddit i'm real good at update names guys</strike></small><br>
         - I'm lazy, that's why.<br>
@@ -90,7 +114,7 @@ let winText = `Congratulations! You have reached the current end of content.`
 // maxAll: autocalling would auto-max buyables even if that function hadn't been unlocked yet, which, uh,
 // calc(Mult/EffBought/Cost/Display): autocalling these breaks the game (lots of undefined errors)
 // buyAThing: see above.
-var doNotCallTheseFunctionsEveryTick = ["maxAll","calcMult","calcEffBought","calcCost","calcDisplay","buyAThing","displayLast8", "cc5Check"]
+var doNotCallTheseFunctionsEveryTick = ["maxAll","calcMult","calcEffBought","calcCost","calcDisplay","buyAThing","displayLast8", "cc5Check","completeAch"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
@@ -133,10 +157,13 @@ var displayThings = [
         return "Time played: " + formatTime(player.timePlayed);
     },
     "<br>",
-    "<button onClick='save()'>Save</button>&nbsp;<button onClick='importSave()'>Load</button>",
+    "Quick Buttons: <br>",
+    function(){
+        return `<button onClick='save()'>Save</button>&nbsp;<button onClick='toggleOpt("autosave")'>Auto: ` + player.autosave + "</button>&nbsp;<button onClick='importSave(localStorage.getItem(modInfo.id))'>Load</button>&nbsp;<button onClick='exportSave()'>Export</button>&nbsp;<button onClick='importSave()'>Import</button>&nbsp;<button onClick='hardReset()'>RESET</button>"
+    },
 ]
 
-let speedrunTime = 9000
+let speedrunTime = 6600
 // Determines when the game "ends"
 function isEndgame() {
 	return player.c.points.gte(twoPow(99));
