@@ -323,6 +323,7 @@ function gameLoop(diff) {
 		player.tab = "gameEnded"
 	}
 	if (player.devSpeed) diff *= player.devSpeed
+    diff *= timeSpeed();
 
 	if (maxTickLength) {
 		let limit = maxTickLength()
@@ -400,7 +401,9 @@ var interval = setInterval(function() {
 		}
 		if (!player.offlineProd || player.offTime.remain <= 0) player.offTime = undefined
 	}
-	if (player.devSpeed) diff *= player.devSpeed
+    //diff gets multiplied by devSpeed in gameLoop as well, so its effect was being squared.
+    //This will probably break something I'm not aware of.
+	//if (player.devSpeed) diff *= player.devSpeed
 	player.time = now
 	if (needCanvasUpdate){ resizeCanvas();
 		needCanvasUpdate = false;

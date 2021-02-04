@@ -770,7 +770,11 @@ function addTime(diff, layer) {
 			if (!layer) player.timePlayedReset = true
 		}
 	}
-	time += toNumber(diff)
+    if(layer){
+        time += toNumber(diff);
+    } else {
+        time += toNumber(diff) / timeSpeed();
+    }
 
 	if (layer) data.time = time
 	else data.timePlayed = time

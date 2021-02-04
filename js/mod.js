@@ -12,12 +12,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.5",
-	name: "Balancing Act",
+	num: "0.2.6",
+	name: "<i>FINALLY.</i>",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-    <h3>v0.2.5 - "Balancing Act"</h3><br>
+    <h3>v0.2.6 - <i>FINALLY.</i></h3><br>
+        - CC10 is a thing now. Penteracts also a thing.<br>
+        - Not much content was actually added- a few upgrades, that's it.<br>
+        - Fixed devSpeed being squared. Might break something.<br>
+        - Endgame is 2^123 CE.<br>
+        - Speedrun: 1h 55m<br>
+        <br>
+    <h3>v0.2.5 - Balancing Act</h3><br>
         - Rebalancing in the aftermath of the {clp5x2} fix, and also rebalancing in general.<br>
 <small> - {imp1x1}: Effect x8 -> x16<br>
         - {imp90x1}: Cost 29 IP -> 1.16e77 points<br>
@@ -132,6 +139,13 @@ function capPoints(){
     }
 }
 
+//Handles things that slow down or speed up the flow of time.
+function timeSpeed(){
+    var tspeed = 1;
+    if(inChallenge("c", 221)) tspeed *= 0.001;
+    return tspeed;
+}
+
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints()){
@@ -163,10 +177,10 @@ var displayThings = [
     },
 ]
 
-let speedrunTime = 6600
+let speedrunTime = 6900
 // Determines when the game "ends"
 function isEndgame() {
-	return player.c.points.gte(twoPow(99));
+	return player.c.points.gte(twoPow(123));
 }
 
 function infinityAt(){
@@ -187,7 +201,7 @@ function infinityAt(){
         result += 2048;
     }
     //prevent challenge shenanigans
-    if(inChallenge("c", 21) || inChallenge("c", 22) || inChallenge("c", 111)){
+    if(inChallenge("c", 21) || (inChallenge("c", 22) && !inChallenge("c", 221)) || inChallenge("c", 111)){
         result = 1024;
     }
     return result;
