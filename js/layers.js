@@ -910,7 +910,7 @@ addLayer("g", {
             result = result.plus(0.15);
         }
         if(hasUpgrade("i", 51)){
-            result = result.plus(0.033);
+            result = result.plus(0.033 * (1 + hasUpgrade("c", 272)));
             if((inChallenge("c", 9001) || (hasUpgrade("e", 21) && !inChallenge("c", 211))) && hasUpgrade("c", 52)){
                 result = result.plus(0.066);
             }
@@ -928,16 +928,16 @@ addLayer("g", {
         //Enhancement per-bought boosts
         if(!inChallenge("c", 211)){
             if(id == 41 && hasUpgrade("e", 41)){
-                result = result.plus(0.1);
+                result = result.plus(0.1 * (1 + hasUpgrade("c", 272)));
             }
             if(id == 31 && hasUpgrade("e", 42)){
-                result = result.plus(0.12);
+                result = result.plus(0.12 * (1 + hasUpgrade("c", 272)));
             }
             if(id == 21 && hasUpgrade("e", 43)){
-                result = result.plus(0.14);
+                result = result.plus(0.14 * (1 + hasUpgrade("c", 272)));
             }
             if(id == 11 && hasUpgrade("e", 44)){
-                result = result.plus(0.16);
+                result = result.plus(0.16 * (1 + hasUpgrade("c", 272)));
             }
         }
         //good ole debugging
@@ -980,6 +980,9 @@ addLayer("g", {
         }
         if(hasUpgrade("c", 252)){
             result = result.times(upgradeEffect("c", 252));
+        }
+        if(hasUpgrade("c", 341)){
+            result = result.times(upgradeEffect("c", 341));
         }
         //Enhancement multipliers
         if(hasUpgrade("e", 22) && !inChallenge("c", 211)){
@@ -1043,10 +1046,10 @@ addLayer("g", {
             result = result.plus(upgradeEffect("i", 33));
         }
         if(id > 16 && id < 46 && hasUpgrade("i", 41)){
-            result = result.plus(upgradeEffect("i", 41));
+            result = result.plus(upgradeEffect("i", 41).times(1 + hasUpgrade("c", 272)));
         }
         if(hasUpgrade("i", 42)){
-            result = result.plus(42);
+            result = result.plus(42 * (1 + hasUpgrade("c", 272)));
         }
         //Collapse bonuses
         if(hasUpgrade("c", 222)){
@@ -1068,6 +1071,12 @@ addLayer("g", {
             }
             if(id == 11 && hasUpgrade("e", 33)){
                 result = result.plus(upgradeEffect("e", 33));
+            }
+            if(id == 41 && hasUpgrade("c", 321)){
+                result = result.plus(upgradeEffect("c", 321));
+            }
+            if(id == 51 && hasUpgrade("c", 322)){
+                result = result.plus(upgradeEffect("c", 322));
             }
         }
         return result;
@@ -1286,6 +1295,15 @@ addLayer("i", {
         };
         if(hasUpgrade("c", 221)){
             result = result.div(upgradeEffect("c", 221));
+        };
+        if(hasUpgrade("c", 331)){
+            result = result.div(upgradeEffect("c", 331));
+        };
+        if(hasUpgrade("c", 332)){
+            result = result.div(upgradeEffect("c", 332));
+        };
+        if(hasUpgrade("c", 333)){
+            result = result.div(upgradeEffect("c", 333));
         };
         return result;
     },
@@ -1646,7 +1664,9 @@ addLayer("i", {
         };
     },
     resetsNothing() { return hasUpgrade("c", 31) },
-    layerShown(){return (getBuyableAmount("g", 31).gte(1) || hasAchievement("ach", "14"))}
+    layerShown(){return (getBuyableAmount("g", 31).gte(1) || hasAchievement("ach", "14"))},
+    //sadly, this does not override default behaviour
+    //shouldNotify(){ if(player.i.autoImprove) return false; } 
 })
 
 addLayer("c", {
@@ -1802,6 +1822,12 @@ addLayer("c", {
         if(hasChallenge("c", 212)){
             segmentPower += 0.25;
         }
+        if(hasUpgrade("c", 361)){
+            segmentPower += upgradeEffect("c", 361).toNumber();
+        }
+        if(hasUpgrade("c", 362)){
+            segmentPower += upgradeEffect("c", 362).toNumber();
+        }
         
         //Multipliers
         if(inChallenge("c", 212)){
@@ -1934,22 +1960,31 @@ addLayer("c", {
         }
         //Enhancement per-bought boosts
         if(id == 11 && hasUpgrade("e", 51)){
-            result = result.plus(0.06);
+            result = result.plus(0.06 * (1 + hasUpgrade("c", 272)));
         }
         if(id == 21 && hasUpgrade("e", 52)){
-            result = result.plus(0.07);
+            result = result.plus(0.07 * (1 + hasUpgrade("c", 272)));
         }
         if(id == 31 && hasUpgrade("e", 53)){
-            result = result.plus(0.08);
+            result = result.plus(0.08 * (1 + hasUpgrade("c", 272)));
         }
         
         result = result.pow(layers[this.layer].calcEffBought(id));
+        
+        //Collapse multipliers
         if(hasUpgrade("c", 41)){
             result = result.times(upgradeEffect("c", 41));
             if((inChallenge("c", 9001) || hasUpgrade("e", 21)) && hasUpgrade("c", 52)){
                 result = result.times(upgradeEffect("c", 41));
             }
         }
+        if(hasUpgrade("c", 271)){
+            result = result.times(upgradeEffect("c", 271));
+        }
+        if(hasUpgrade("c", 351)){
+            result = result.times(upgradeEffect("c", 351));
+        }
+        //Enhancement multipliers
         if(hasUpgrade("e", 11)){
             result = result.times(upgradeEffect("e", 11));
         }
@@ -2030,10 +2065,10 @@ addLayer("c", {
                 return layers[this.layer].calcEffBought(this.id);
             },
             cost(){
-                return layers[this.layer].calcCost(this.id, 1, 512, 0.05);
+                return layers[this.layer].calcCost(this.id, 1, 512, 0.032);
             },
             display() {
-                return layers[this.layer].calcDisplay(this.id, "Collapsed Triangles", 1, 512, 0.05);
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Triangles", 1, 512, 0.032);
             },
             canAfford() { return player.c.points.gte(this.cost()) },
             buy() {
@@ -2052,10 +2087,10 @@ addLayer("c", {
                 return layers[this.layer].calcEffBought(this.id);
             },
             cost(){
-                return layers[this.layer].calcCost(this.id, 4, 2048, 0.1);
+                return layers[this.layer].calcCost(this.id, 4, 2048, 0.036);
             },
             display() {
-                return layers[this.layer].calcDisplay(this.id, "Collapsed Pyramids", 4, 2048, 0.1);
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Pyramids", 4, 2048, 0.036);
             },
             canAfford() { return player.c.points.gte(this.cost()) },
             buy() {
@@ -2073,10 +2108,10 @@ addLayer("c", {
                 return layers[this.layer].calcEffBought(this.id);
             },
             cost(){
-                return layers[this.layer].calcCost(this.id, 32, 8192, 0.15);
+                return layers[this.layer].calcCost(this.id, 32, 8192, 0.04);
             },
             display() {
-                return layers[this.layer].calcDisplay(this.id, "Collapsed Pentachorons", 32, 8192, 0.15);
+                return layers[this.layer].calcDisplay(this.id, "Collapsed Pentachorons", 32, 8192, 0.04);
             },
             canAfford() { return player.c.points.gte(this.cost()) },
             buy() {
@@ -2391,10 +2426,18 @@ addLayer("c", {
                 for(var i = 1; i <= layers.c.totalBuyables; i++){
                     result = result.plus(player.c.bought[i]);
                 }
-                return new Decimal(0.032).times(result);
+                result = new Decimal(0.032).times(result);
+                if(result.gte(1.5)){
+                    result = result.times(3.375).pow(0.25)
+                }
+                return result;
             },
             effectDisplay(){
-                return "+" + format(this.effect());
+                var disp = "+" + format(this.effect());
+                if(this.effect().gte(1.5)){
+                    disp = disp + "<br>(softcapped:<br> {(fx * 3.375)^0.25})";
+                }
+                return disp;
             },
             cost: twoPow(40),
             unlocked(){return hasUpgrade("c", 161)},
@@ -2528,6 +2571,176 @@ addLayer("c", {
             cost: twoPow(121),
             unlocked(){return hasChallenge("c", 212)},
         },
+        271: {
+            title: "clp27x1",
+            description: "Multiply all Collapse buyables by your total Collapse count plus one.",
+            effect(){
+                var result = player.c.resetCount.plus(1);
+                return result;
+            },
+            effectDisplay(){
+                return "x" + format(this.effect());
+            },
+            cost: twoPow(123),
+            unlocked(){return hasChallenge("c", 212)},
+        },
+        272: {
+            title: "clp27x2",
+            description: "Clones the effects of all fourth and fifth-row Improvements and Enhancements.",
+            cost: twoPow(127),
+            unlocked(){return hasChallenge("c", 212)},
+        },
+        273: {
+            title: "clp27x3",
+            description: "Multiply the limit on Points by 2^1,024 (increasing CE gain), and unlock the final set of Collapse Upgrades.",
+            cost: twoPow(133),
+            unlocked(){return hasChallenge("c", 212)},
+        },
+        //Upgrades δ
+        311: {
+            title: "clp31x1",
+            description: "{Pay to Win}'s reward counts Collapse Upgrades, and is further multiplied by 1.5.",
+            cost: twoPow(142),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        321: {
+            title: "clp32x1",
+            description: "Gain 2 free bought Tesseracts for every effective bought Collapsed Pentachoron.",
+            effect(){
+                return layers.c.calcEffBought(31).times(2);
+            },
+            effectDisplay(){
+                return "+" + formatWhole(this.effect());
+            },
+            cost: twoPow(149),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        322: {
+            title: "clp32x2",
+            description: "Gain a free bought Penteract for each one you actually buy.",
+            effect(){
+                return player.g.bought[5];
+            },
+            effectDisplay(){
+                return "+" + formatWhole(this.effect());
+            },
+            cost: twoPow(150),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        331: {
+            title: "clp33x1",
+            description: "Divide the cost of Improvement Points by the multiplier on Line Segments raised to the third power.",
+            effect(){
+                return layers.g.calcMult(11).pow(3);
+            },
+            effectDisplay(){
+                return "/" + formatWhole(this.effect());
+            },
+            cost: twoPow(153),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        332: {
+            title: "clp33x2",
+            description: "Divide the cost of Improvement Points by the multiplier on Collapsed Triangles raised to the 50th power.",
+            effect(){
+                return layers.c.calcMult(11).pow(50);
+            },
+            effectDisplay(){
+                return "/" + formatWhole(this.effect());
+            },
+            cost: twoPow(155),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        333: {
+            title: "clp33x3",
+            description: "Divide the cost of Improvement Points by the limit on Points.",
+            effect(){
+                return twoPow(infinityAt());
+            },
+            effectDisplay(){
+                return "/" + formatWhole(this.effect());
+            },
+            cost: twoPow(157),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        341: {
+            title: "clp34x1",
+            description: "Multiply all Geometry multipliers by the multiplier of Collapsed Triangles.",
+            effect(){
+                return layers.c.calcMult(11);
+            },
+            effectDisplay(){
+                return "x" + formatWhole(this.effect());
+            },
+            cost: twoPow(158),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        351: {
+            title: "clp35x1",
+            description: "Multiply all Collapse buyables by the squared log2 of the limit on Points.",
+            effect(){
+                return new Decimal(infinityAt()).pow(2);
+            },
+            effectDisplay(){
+                return "x" + formatWhole(this.effect());
+            },
+            cost: twoPow(163),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        352: {
+            title: "clp35x2",
+            description: "Double the limit on Points for every TRUE bought Penteract, Tesseract, and Cube.",
+            effect(){
+                return player.g.bought[5].plus(player.g.bought[4]).plus(player.g.bought[3]);
+            },
+            effectDisplay(){
+                return "x2^" + formatWhole(this.effect());
+            },
+            cost: twoPow(169),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        353: {
+            title: "clp35x3",
+            description: "Double the limit on Points for every TRUE bought Square and Line Segment.",
+            effect(){
+                return player.g.bought[2].plus(player.g.bought[1]);
+            },
+            effectDisplay(){
+                return "x2^" + formatWhole(this.effect());
+            },
+            cost: twoPow(181),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        361: {
+            title: "clp36x1",
+            description: "Increase the CS exponent by half the effect of {clp17x2}.",
+            effect(){
+                return upgradeEffect("c", 172).times(0.5)
+            },
+            effectDisplay(){
+                return "+" + format(this.effect());
+            },
+            cost: twoPow(196),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        362: {
+            title: "clp36x2",
+            description: "Increase the CS exponent by half the effect of {clp17x3}.",
+            effect(){
+                return upgradeEffect("c", 173).times(0.5)
+            },
+            effectDisplay(){
+                return "+" + format(this.effect());
+            },
+            cost: twoPow(204),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
+        371: {
+            title: "clp31x1",
+            description: "{Pay to Win}'s reward counts TRUE bought Collapse buyables, and is further multiplied by 2.5.",
+            cost: twoPow(222),
+            unlocked(){return hasUpgrade("c", 273)},
+        },
     },
     
     challenges: {
@@ -2577,10 +2790,24 @@ addLayer("c", {
                 if(hasUpgrade("c", 213)){
                     result += player.e.upgrades.length;
                 }
+                if(hasUpgrade("c", 311)){
+                    result += player.c.upgrades.length;
+                }
+                if(hasUpgrade("c", 371)){
+                    for(var i = 1; i <= layers.c.totalBuyables; i++){
+                        result += player.c.bought[i].toNumber();
+                    }
+                }
                 result = 0.25 + 0.75 * Math.pow(result, 0.4);
                 if(hasChallenge("c", 122)){
                     result = Math.pow(result, 1.5);
                 };
+                if(hasUpgrade("c", 311)){
+                    result *= 1.5;
+                }
+                if(hasUpgrade("c", 371)){
+                    result *= 2.5;
+                }
                 return result;
             },
             rewardDisplay(){
@@ -2590,6 +2817,12 @@ addLayer("c", {
                 }
                 if(hasUpgrade("c", 213)){
                     result = result + "<br>({clp21x3}: Counts Enhancements too)";
+                }
+                if(hasUpgrade("c", 311)){
+                    result = result + "<br>({clp31x1}: Counts Collapse Upgrades too, effect x1.5)";
+                }
+                if(hasUpgrade("c", 371)){
+                    result = result + "<br>({clp37x1}: Counts TRUE bought Collapse buyables too, effect x2.5)";
                 }
                 return result;
             },
@@ -2705,7 +2938,7 @@ addLayer("c", {
             onComplete(){
                 doReset(this.layer);
             },
-            rewardDescription: "PERMANENTLY unlock Penteracts, unlock X more Collapse Upgrades, and unlock the ability to completely remove the limit on Points.",
+            rewardDescription: "PERMANENTLY unlock Penteracts, unlock 5 more Collapse Upgrades, and unlock the ability to completely remove the limit on Points.",
             unlocked(){ return hasUpgrade("c", 261)},
             countsAs: [11, 22, 212, 9001],
         }
@@ -2825,6 +3058,13 @@ addLayer("c", {
                     "background-color": "#241230",
                     "border-color": "#c3ade3",
                 },
+                shouldNotify(){
+                    for(var i = 1; i <= layers.c.totalBuyables; i++){
+                        if(layers.c.buyables[i * 10 + 1].canAfford() && layers.c.buyables[i * 10 + 1].unlocked()){
+                            return true;
+                        }
+                    }
+                }
             },
             "Upgrades": {
                 content: [
@@ -2850,6 +3090,16 @@ addLayer("c", {
                 },
                 unlocked() {
                     return player.c.resetCount.gte(2);
+                },
+                shouldNotify(){
+                    //copied from game.js
+                    for (id in tmp["c"].upgrades){
+                        if (!isNaN(id)){
+                            if (canAffordUpgrade("c", id) && !hasUpgrade("c", id) && tmp["c"].upgrades[id].unlocked){
+                                return true
+                            }
+                        }
+                    }
                 }
             },
             "Challenges": {
@@ -3092,7 +3342,50 @@ addLayer("c", {
                 unlocked() {
                     return hasChallenge("c", 122);
                 }
-            }
+            },
+            "δ": {
+                content: [
+                    ["row", [
+                        ["upgrade", 311],
+                    ]],
+                    ["row", [
+                        ["upgrade", 321],
+                        ["upgrade", 322],
+                    ]],
+                    ["row", [
+                        ["upgrade", 331],
+                        ["upgrade", 332],
+                        ["upgrade", 333],
+                    ]],
+                    ["row", [
+                        ["upgrade", 341],
+                    ]],
+                    ["row", [
+                        ["upgrade", 351],
+                        ["upgrade", 352],
+                        ["upgrade", 353],
+                    ]],
+                    ["row", [
+                        ["upgrade", 361],
+                        ["upgrade", 362],
+                    ]],
+                    ["row", [
+                        ["upgrade", 371],
+                    ]],
+                    "blank",
+                ],
+                style: {
+                    "background-color": "#1f1e33",
+                    "margin": "20px",
+                },
+                buttonStyle: {
+                    "background-color": "#5d5a9c",
+                    "border-color": "#c3ade3",
+                },
+                unlocked() {
+                    return hasUpgrade("c", 273);
+                }
+            },
         },
         challengeTabs: {
             "α": {

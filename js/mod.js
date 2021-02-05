@@ -12,11 +12,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.6",
-	name: "<i>FINALLY.</i>",
+	num: "0.2.7",
+	name: "Filler Update",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+    <h3>v0.2.7 - Filler Update</h3><br>
+        - Added more things, from Penteracts to the planned next reset layer.<br>
+        - Endgame is 2^256 CE.<br>
+        - Speedrun: 2h 10m<br>
+        <br>
     <h3>v0.2.6 - <i>FINALLY.</i></h3><br>
         - CC10 is a thing now. Penteracts also a thing.<br>
         - Not much content was actually added- a few upgrades, that's it.<br>
@@ -177,16 +182,19 @@ var displayThings = [
     },
 ]
 
-let speedrunTime = 6900
+let speedrunTime = 7800
 // Determines when the game "ends"
 function isEndgame() {
-	return player.c.points.gte(twoPow(123));
+	return player.c.points.gte(twoPow(256));
 }
 
 function infinityAt(){
     var result = 1024;
     if(hasUpgrade("c", 81)){
         result += 1024;
+        if(hasUpgrade("c", 273)){
+            result += 1024;
+        }
     }
     if(hasUpgrade("c", 131)){
         result += 1024;
@@ -199,6 +207,12 @@ function infinityAt(){
     }
     if(hasUpgrade("c", 231)){
         result += 2048;
+    }
+    if(hasUpgrade("c", 352)){
+        result += upgradeEffect("c", 352).toNumber();
+    }
+    if(hasUpgrade("c", 353)){
+        result += upgradeEffect("c", 353).toNumber();
     }
     //prevent challenge shenanigans
     if(inChallenge("c", 21) || (inChallenge("c", 22) && !inChallenge("c", 221)) || inChallenge("c", 111)){
